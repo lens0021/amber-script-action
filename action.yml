@@ -1,0 +1,75 @@
+name: amber-script-action
+description: Run arbitrary Amber script.
+inputs:
+  script:
+    required: true
+  amber-version:
+    default: 0.4.0
+  enable-cache:
+    description: Whether to cache amber binary and the compiled bash script.
+    default: true
+  cache-path:
+    default: /home/runner/.amber-script-action
+  internal-eof-word:
+    default: END_OF_GIVEN_AMBER_SCRIPT
+runs:
+  # We make this as a composite action to reduce the maintaining cost.
+  # There is a limitation of composite action itself:
+  #   - name of steps are not displayed. (https://github.com/orgs/community/discussions/10985)
+  using: composite
+  steps:
+    - name: Cache compiled script
+      uses: actions/cache@v3
+      if: inputs.enable-cache
+      with:
+        path: ${{ inputs.cache-path }}/dest
+        key: amber-script-action-${{ inputs.amber-version }}-${{ inputs.script }}
+    - name: Cache Amber binaries
+      uses: actions/cache@v3
+      if: inputs.enable-cache
+      with:
+        path: ${{ inputs.cache-path }}/bin
+        key: ${{ runner.os }}-amber-script-action-${{ inputs.amber-version }}-${{ inputs.script }}
+
+    # TODO: Convert this to amber-script-action
+    - shell: bash
+      run: |
+        if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
+          if [ -e "${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }}" ]; then
+            # Install Amber
+            OS_TYPE="$(uname -s)"
+            case "$OS_TYPE" in
+              Darwin)
+                OS=apple-darwin
+                ;;
+              Linux)
+                OS=unknown-linux-musl
+                ;;
+            esac
+            ARCH_TYPE="$(uname -m)"
+            case "$ARCH_TYPE" in
+              aarch64 | arm64)
+                ARCH=aarch64
+                ;;
+              *)
+                ARCH=x86_64
+                ;;
+            esac
+            mkdir -p "${{ inputs.cache-path }}/bin"
+            URL="https://github.com/amber-lang/amber/releases/download/{{ inputs.amber-version }}/amber-${ARCH}-${OS}.tar.xz"
+            curl -L o amber.tar.xz "$URL"
+            mv amber.tar.xz "${{ inputs.cache-path }}/bin/amber.tar.xz"
+            tar --strip-components=1 -xvf "${{ inputs.cache-path }}/bin/amber.tar.xz"
+            rm "${{ inputs.cache-path }}/bin/amber.tar.xz"
+            chmod +x "${{ inputs.cache-path }}/bin/amber"
+            mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }}"
+          fi
+          # Build the given script
+          mkdir -p "${{ inputs.cache-path }}/tmp"
+          cat <<{{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
+          {{ inputs.script }}
+          {{ inputs.internal-eof-word }}
+          ${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
+        fi
+        # Run the compiled script
+        bash "${{ inputs.cache-path }}/dest/script.sh"
