@@ -42,7 +42,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: lens0021/amber-script-action@main
+      - uses: lens0021/amber-script-action@v1
         with:
           script: |
             const msg = "Hello World!"
