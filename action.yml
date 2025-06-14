@@ -73,8 +73,8 @@ runs:
           if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
           mkdir -p "${{ inputs.cache-path }}/tmp"
           cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
-          ${{ inputs.script }}
-          ${{ inputs.internal-eof-word }}
+        ${{ inputs.script }}
+        ${{ inputs.internal-eof-word }}
           ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
         fi
 
