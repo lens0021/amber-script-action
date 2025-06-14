@@ -1,6 +1,6 @@
 ---
 name: Hello World
-on: push
+on: ["push", "pull_request"]
 permissions: read-all
 
 jobs:
