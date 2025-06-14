@@ -35,8 +35,12 @@ runs:
     - shell: bash
       run: |
         # Install Amber
-        if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
-          if [ ! -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
+        if [ -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
+          echo "::debug::A compiled bash script found."
+        else
+          if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
+            echo "::debug::No Amber binary found."
+          else
             OS_TYPE="$(uname -s)"
             case "$OS_TYPE" in
               Darwin)
@@ -70,8 +74,13 @@ runs:
     - shell: bash
       run: |
         # Build the given script
-        if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
-          if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
+        if [ -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
+          echo "::debug::A compiled bash script found. Skip building."
+        else
+          if [ ! -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
+            echo "::error::No both compfiled bash script and Amber binary found after trying to install."
+            exit 1
+          else
             mkdir -p "${{ inputs.cache-path }}/tmp"
             cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
         ${{ inputs.script }}
