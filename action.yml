@@ -59,7 +59,7 @@ runs:
             URL="https://github.com/amber-lang/amber/releases/download/${{ inputs.amber-version }}/amber-${ARCH}-${OS}.tar.xz"
             curl -L -o amber.tar.xz "$URL"
             mv amber.tar.xz "${{ inputs.cache-path }}/bin/amber.tar.xz"
-            tar --strip-components=1 -xvf "${{ inputs.cache-path }}/bin/amber.tar.xz"
+            tar --strip-components=1 -xvf "${{ inputs.cache-path }}/bin/amber.tar.xz" -C "${{ inputs.cache-path }}/bin"
             rm "${{ inputs.cache-path }}/bin/amber.tar.xz"
             chmod +x "${{ inputs.cache-path }}/bin/amber"
             mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}"
