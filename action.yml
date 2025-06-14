@@ -23,13 +23,13 @@ runs:
       if: inputs.enable-cache
       with:
         path: ${{ inputs.cache-path }}/dest
-        key: amber-script-action-${{ inputs.amber-version }}-${{ inputs.script }}
+        key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}-${{ inputs.script }}
     - name: Cache Amber binaries
       uses: actions/cache@v3
       if: inputs.enable-cache
       with:
         path: ${{ inputs.cache-path }}/bin
-        key: ${{ runner.os }}-amber-script-action-${{ inputs.amber-version }}-${{ inputs.script }}
+        key: amber-script-action-${{ runner.os }}-bin-${{ inputs.amber-version }}
 
     # TODO: Convert this to amber-script-action
     - shell: bash
