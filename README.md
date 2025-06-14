@@ -47,7 +47,7 @@ jobs:
           script: |
             const msg = "Hello World!"
             echo msg
-            echo "The length of the previous message is {len msg}
+            echo "The length of the previous message is {len msg}."
 ```
 
 [actions/github-script]: https://github.com/actions/github-script
