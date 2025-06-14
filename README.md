@@ -8,9 +8,11 @@ Inspired by [actions/github-script].
 See [action.yml](action.yml)
 
 <!-- start usage -->
+
 ```yaml
 TODO auto-generate this
 ```
+
 <!-- end usage -->
 
 **Basic:**
