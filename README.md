@@ -7,7 +7,7 @@ Inspired by [actions/github-script].
 
 ## Usage
 
-See [action.yml](action.yml)
+See [action.yaml](action.yaml)
 
 <!-- start usage -->
 
