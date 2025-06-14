@@ -36,7 +36,7 @@ runs:
       run: |
         # Install Amber
         if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
-          if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
+          if [ ! -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
             OS_TYPE="$(uname -s)"
             case "$OS_TYPE" in
               Darwin)
@@ -65,6 +65,7 @@ runs:
             mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}"
           fi
         fi
+
     # TODO: Convert this to amber-script-action
     - shell: bash
       run: |
