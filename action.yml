@@ -35,7 +35,7 @@ runs:
     - shell: bash
       run: |
         if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
-          if [ -e "${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }}" ]; then
+          if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
             # Install Amber
             OS_TYPE="$(uname -s)"
             case "$OS_TYPE" in
@@ -56,20 +56,20 @@ runs:
                 ;;
             esac
             mkdir -p "${{ inputs.cache-path }}/bin"
-            URL="https://github.com/amber-lang/amber/releases/download/{{ inputs.amber-version }}/amber-${ARCH}-${OS}.tar.xz"
+            URL="https://github.com/amber-lang/amber/releases/download/${{ inputs.amber-version }}/amber-${ARCH}-${OS}.tar.xz"
             curl -L o amber.tar.xz "$URL"
             mv amber.tar.xz "${{ inputs.cache-path }}/bin/amber.tar.xz"
             tar --strip-components=1 -xvf "${{ inputs.cache-path }}/bin/amber.tar.xz"
             rm "${{ inputs.cache-path }}/bin/amber.tar.xz"
             chmod +x "${{ inputs.cache-path }}/bin/amber"
-            mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }}"
+            mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}"
           fi
           # Build the given script
           mkdir -p "${{ inputs.cache-path }}/tmp"
-          cat <<{{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
-          {{ inputs.script }}
-          {{ inputs.internal-eof-word }}
-          ${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
+          cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
+          ${{ inputs.script }}
+          ${{ inputs.internal-eof-word }}
+          ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
         fi
         # Run the compiled script
         bash "${{ inputs.cache-path }}/dest/script.sh"
