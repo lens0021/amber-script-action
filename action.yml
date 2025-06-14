@@ -33,7 +33,7 @@ runs:
       if: inputs.enable-cache
       with:
         path: ${{ inputs.cache-path }}/dest
-        key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}-${{ steps.hash-script.outputs.hash }}
+        key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}
     - name: Cache Amber binaries
       uses: actions/cache@v3
       if: inputs.enable-cache
@@ -45,7 +45,7 @@ runs:
     - shell: bash
       run: |
         # Install Amber
-        if [ -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
+        if [ -e "${{ inputs.cache-path }}/dest/${{ steps.hash-script.outputs.hash }}.sh" ]; then
           echo "::debug::A compiled bash script found."
         else
           if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
@@ -84,7 +84,7 @@ runs:
     - shell: bash
       run: |
         # Build the given script
-        if [ -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
+        if [ -e "${{ inputs.cache-path }}/dest/${{ steps.hash-script.outputs.hash }}.sh" ]; then
           echo "::debug::A compiled bash script found. Skip building."
         else
           if [ ! -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
@@ -92,11 +92,11 @@ runs:
             exit 1
           else
             mkdir -p "${{ inputs.cache-path }}/tmp"
-            cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
+            cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab"
         ${{ inputs.script }}
         ${{ inputs.internal-eof-word }}
             mkdir -p "${{ inputs.cache-path }}/dest"
-            ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
+            ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab" "${{ inputs.cache-path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
           fi
         fi
 
@@ -104,4 +104,4 @@ runs:
     - shell: bash
       run: |
         # Run the compiled script
-        bash "${{ inputs.cache-path }}/dest/script.sh"
+        bash "${{ inputs.cache-path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
