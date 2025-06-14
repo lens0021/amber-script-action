@@ -12,7 +12,7 @@ See [action.yaml](action.yaml)
 <!-- start usage -->
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: lens0021/amber-script-action@v1
   with:
     # The script to run.
     script: ""
