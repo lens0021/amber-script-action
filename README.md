@@ -2,7 +2,7 @@
 
 [![Linter](https://github.com/lens0021/amber-script-action/actions/workflows/linter.yaml/badge.svg)](https://github.com/lens0021/amber-script-action/actions/workflows/linter.yaml)
 
-Run arbitrary Amber script via GitHub Actions.
+Run arbitrary [Amber] script via GitHub Actions.
 Inspired by [actions/github-script].
 
 ## Usage
@@ -50,4 +50,5 @@ jobs:
             echo "The length of the previous message is {len msg}."
 ```
 
+[amber]: https://amber-lang.com/
 [actions/github-script]: https://github.com/actions/github-script
