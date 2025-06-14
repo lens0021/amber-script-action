@@ -34,9 +34,9 @@ runs:
     # TODO: Convert this to amber-script-action
     - shell: bash
       run: |
+        # Install Amber
         if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
           if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
-            # Install Amber
             OS_TYPE="$(uname -s)"
             case "$OS_TYPE" in
               Darwin)
@@ -64,12 +64,22 @@ runs:
             chmod +x "${{ inputs.cache-path }}/bin/amber"
             mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}"
           fi
-          # Build the given script
+        fi
+    # TODO: Convert this to amber-script-action
+    - shell: bash
+      run: |
+        # Build the given script
+        if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
+          if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
           mkdir -p "${{ inputs.cache-path }}/tmp"
           cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
           ${{ inputs.script }}
           ${{ inputs.internal-eof-word }}
           ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
         fi
+
+    # TODO: Convert this to amber-script-action
+    - shell: bash
+      run: |
         # Run the compiled script
         bash "${{ inputs.cache-path }}/dest/script.sh"
