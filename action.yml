@@ -71,11 +71,12 @@ runs:
         # Build the given script
         if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
           if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
-          mkdir -p "${{ inputs.cache-path }}/tmp"
-          cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
+            mkdir -p "${{ inputs.cache-path }}/tmp"
+            cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
         ${{ inputs.script }}
         ${{ inputs.internal-eof-word }}
-          ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
+            ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
+          fi
         fi
 
     # TODO: Convert this to amber-script-action
