@@ -4,7 +4,7 @@ inputs:
   script:
     required: true
   amber-version:
-    default: 0.4.0
+    default: 0.4.0-alpha
   enable-cache:
     description: Whether to cache amber binary and the compiled bash script.
     default: true
@@ -34,9 +34,13 @@ runs:
     # TODO: Convert this to amber-script-action
     - shell: bash
       run: |
-        if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
-          if [ -e "${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }}" ]; then
-            # Install Amber
+        # Install Amber
+        if [ -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
+          echo "::debug::A compiled bash script found."
+        else
+          if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
+            echo "::debug::No Amber binary found."
+          else
             OS_TYPE="$(uname -s)"
             case "$OS_TYPE" in
               Darwin)
@@ -56,20 +60,38 @@ runs:
                 ;;
             esac
             mkdir -p "${{ inputs.cache-path }}/bin"
-            URL="https://github.com/amber-lang/amber/releases/download/{{ inputs.amber-version }}/amber-${ARCH}-${OS}.tar.xz"
-            curl -L o amber.tar.xz "$URL"
+            URL="https://github.com/amber-lang/amber/releases/download/${{ inputs.amber-version }}/amber-${ARCH}-${OS}.tar.xz"
+            curl -L -o amber.tar.xz "$URL"
             mv amber.tar.xz "${{ inputs.cache-path }}/bin/amber.tar.xz"
-            tar --strip-components=1 -xvf "${{ inputs.cache-path }}/bin/amber.tar.xz"
+            tar --strip-components=1 -xvf "${{ inputs.cache-path }}/bin/amber.tar.xz" -C "${{ inputs.cache-path }}/bin"
             rm "${{ inputs.cache-path }}/bin/amber.tar.xz"
             chmod +x "${{ inputs.cache-path }}/bin/amber"
-            mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }}"
+            mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}"
           fi
-          # Build the given script
-          mkdir -p "${{ inputs.cache-path }}/tmp"
-          cat <<{{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
-          {{ inputs.script }}
-          {{ inputs.internal-eof-word }}
-          ${{ inputs.cache-path }}/bin/amber-{{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
         fi
+
+    # TODO: Convert this to amber-script-action
+    - shell: bash
+      run: |
+        # Build the given script
+        if [ -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
+          echo "::debug::A compiled bash script found. Skip building."
+        else
+          if [ ! -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
+            echo "::error::No both compfiled bash script and Amber binary found after trying to install."
+            exit 1
+          else
+            mkdir -p "${{ inputs.cache-path }}/tmp"
+            cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
+        ${{ inputs.script }}
+        ${{ inputs.internal-eof-word }}
+            mkdir -p "${{ inputs.cache-path }}/dest"
+            ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
+          fi
+        fi
+
+    # TODO: Convert this to amber-script-action
+    - shell: bash
+      run: |
         # Run the compiled script
         bash "${{ inputs.cache-path }}/dest/script.sh"
