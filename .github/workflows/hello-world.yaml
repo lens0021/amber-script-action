@@ -4,7 +4,8 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: lens0021/amber-script-action@main
+      - uses: actions/checkout@v4
+      - uses: ./
         with:
           script: |
             const msg = "Hello World!"
