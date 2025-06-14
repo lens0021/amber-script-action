@@ -85,6 +85,7 @@ runs:
             cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
         ${{ inputs.script }}
         ${{ inputs.internal-eof-word }}
+            mkdir -p "${{ inputs.cache-path }}/dest"
             ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
           fi
         fi
