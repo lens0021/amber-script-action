@@ -57,7 +57,7 @@ runs:
             esac
             mkdir -p "${{ inputs.cache-path }}/bin"
             URL="https://github.com/amber-lang/amber/releases/download/${{ inputs.amber-version }}/amber-${ARCH}-${OS}.tar.xz"
-            curl -L o amber.tar.xz "$URL"
+            curl -L -o amber.tar.xz "$URL"
             mv amber.tar.xz "${{ inputs.cache-path }}/bin/amber.tar.xz"
             tar --strip-components=1 -xvf "${{ inputs.cache-path }}/bin/amber.tar.xz"
             rm "${{ inputs.cache-path }}/bin/amber.tar.xz"
