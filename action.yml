@@ -18,12 +18,22 @@ runs:
   #   - name of steps are not displayed. (https://github.com/orgs/community/discussions/10985)
   using: composite
   steps:
+    - id: hash-script
+      shell: bash
+      run: |
+        # Make cache key for given script
+        {
+          echo -n 'hash='
+          cat <<${{ inputs.internal-eof-word }} | sha256sum | cut -d' ' -f 1
+        ${{ inputs.script }}
+        ${{ inputs.internal-eof-word }}
+        } >> "$GITHUB_OUTPUT"
     - name: Cache compiled script
       uses: actions/cache@v3
       if: inputs.enable-cache
       with:
         path: ${{ inputs.cache-path }}/dest
-        key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}-${{ inputs.script }}
+        key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}-${{ steps.hash-script.outputs.hash }}
     - name: Cache Amber binaries
       uses: actions/cache@v3
       if: inputs.enable-cache
