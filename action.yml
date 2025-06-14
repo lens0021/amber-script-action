@@ -10,6 +10,8 @@ inputs:
     default: true
   cache-path:
     default: /home/runner/.amber-script-action
+  internal-eof-word:
+    default: END_OF_GIVEN_AMBER_SCRIPT
 runs:
   # We make this as a composite action to reduce the maintaining cost.
   # There is a limitation of composite action itself:
@@ -63,7 +65,6 @@ runs:
             mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}"
           fi
         fi
-
     # TODO: Convert this to amber-script-action
     - shell: bash
       run: |
@@ -71,7 +72,9 @@ runs:
         if [ ! -e "${{ inputs.cache-path }}/dest/script.sh" ]; then
           if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
           mkdir -p "${{ inputs.cache-path }}/tmp"
-          echo -n "${{ inputs.script }}" > "${{ inputs.cache-path }}/tmp/script.ab"
+          cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/script.ab"
+          ${{ inputs.script }}
+          ${{ inputs.internal-eof-word }}
           ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/script.ab" "${{ inputs.cache-path }}/dest/script.sh"
         fi
 
