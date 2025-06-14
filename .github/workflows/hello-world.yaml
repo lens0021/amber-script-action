@@ -1,4 +1,7 @@
+---
+name: Hello World
 on: push
+permissions: read-all
 
 jobs:
   hello-world:
