@@ -5,6 +5,12 @@
 Run arbitrary [Amber] script via GitHub Actions.
 Inspired by [actions/github-script].
 
+> [!NOTE]
+> This is a [composite action] because I want less maintaining costs.
+> There is a limitation of composite action itself:
+>
+> - Name of steps are not displayed. ([link](https://github.com/orgs/community/discussions/10985))
+
 ## Usage
 
 See [action.yaml](action.yaml)
@@ -52,3 +58,4 @@ jobs:
 
 [amber]: https://amber-lang.com/
 [actions/github-script]: https://github.com/actions/github-script
+[composite action]: https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action

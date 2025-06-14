@@ -19,9 +19,6 @@ inputs:
     description: Internal only. Do not use this.
     default: END_OF_GIVEN_AMBER_SCRIPT
 runs:
-  # This is a composite action which has less maintaining costs.
-  # There is a limitation of composite action itself:
-  #   - Name of steps are not displayed. (https://github.com/orgs/community/discussions/10985)
   using: composite
   steps:
     - id: hash-script
