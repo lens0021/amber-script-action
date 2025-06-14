@@ -41,46 +41,77 @@ runs:
         path: ${{ inputs.cache-path }}/bin
         key: amber-script-action-${{ runner.os }}-bin-${{ inputs.amber-version }}
 
-    # TODO: Convert this to amber-script-action
-    - shell: bash
-      run: |
-        # Install Amber
-        if [ -e "${{ inputs.cache-path }}/dest/${{ steps.hash-script.outputs.hash }}.sh" ]; then
-          echo "::debug::A compiled bash script found."
-        else
-          if [ -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
-            echo "::debug::No Amber binary found."
-          else
-            OS_TYPE="$(uname -s)"
-            case "$OS_TYPE" in
-              Darwin)
-                OS=apple-darwin
-                ;;
-              Linux)
-                OS=unknown-linux-musl
-                ;;
-            esac
-            ARCH_TYPE="$(uname -m)"
-            case "$ARCH_TYPE" in
-              aarch64 | arm64)
-                ARCH=aarch64
-                ;;
-              *)
-                ARCH=x86_64
-                ;;
-            esac
-            mkdir -p "${{ inputs.cache-path }}/bin"
-            URL="https://github.com/amber-lang/amber/releases/download/${{ inputs.amber-version }}/amber-${ARCH}-${OS}.tar.xz"
-            curl -L -o amber.tar.xz "$URL"
-            mv amber.tar.xz "${{ inputs.cache-path }}/bin/amber.tar.xz"
-            tar --strip-components=1 -xvf "${{ inputs.cache-path }}/bin/amber.tar.xz" -C "${{ inputs.cache-path }}/bin"
-            rm "${{ inputs.cache-path }}/bin/amber.tar.xz"
-            chmod +x "${{ inputs.cache-path }}/bin/amber"
-            mv "${{ inputs.cache-path }}/bin/amber" "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}"
-          fi
-        fi
+    - uses: lens0021/amber-script-action@3c7caebc8e12acfa4e6eede82b524470e1a5dfea
+      with:
+        script: |
+          import { array_contains } from "std/array"
+          import { has_failed } from "std/env"
+          import { dir_create, file_chmod, file_exists, file_extract } from "std/fs"
+          import { file_download } from "std/http"
 
-    # TODO: Convert this to amber-script-action
+          // copy. original: https://github.com/amber-lang/amber/blob/0.4.0-alpha/setup/shared.ab
+          fun get_os(): Text {
+            // Determine OS type
+            let os_type = $ uname -s $ failed {
+                echo "Failed to determine OS type (using `uname` command)."
+                echo "Please try again or make sure you have it installed."
+                exit 1
+            }
+            if os_type == "Darwin":
+                return "apple-darwin"
+
+            if os_type != "Linux" {
+                echo "Unsupported OS type: {os_type}"
+                echo "Please try again or use another download method."
+                exit 1
+            }
+
+            if not has_failed("ls -l /lib | grep libc.musl"):
+                return "unknown-linux-musl"
+
+            return "unknown-linux-gnu"
+          }
+
+          fun get_arch(): Text {
+            // Determine architecture
+            let arch_type = $ uname -m $ failed {
+                echo "Failed to determine architecture."
+                echo "Please try again or use another download method."
+                exit 1
+            }
+
+            let arch = array_contains(["arm64", "aarch64"], arch_type)
+                then "aarch64"
+                else "x86_64"
+
+            return arch
+          }
+          // end copy
+
+          const cache_path = "/home/runner/.amber-script-action"
+          const bin_path = "{cache_path}/bin"
+          const dest_path = "{cache_path}/dest"
+          const tmp_path = "{cache_path}/tmp"
+          const arch = get_arch()
+          const os = get_os()
+
+          if {
+            file_exists("{dest_path}/script.sh") {
+              echo "::debug::A compiled bash script found. Skipping install Amber."
+            } file_exists("{bin_path}/amber") {
+              echo "::debug::Amber binary found. Skipping install Amber."
+            } else {
+              dir_create(bin_path)
+              let url = "https://github.com/amber-lang/amber/releases/download/0.4.0-alpha/amber-{arch}-{os}.tar.xz"
+              file_download(url, "{tmp_path}/amber.tar.xz")
+              trust file_extract("{tmp_path}/amber.tar.xz", "{tmp_path}")
+              trust mv "{tmp_path}/amber-{arch}-{os}/amber" "{bin_path}/amber"
+              file_chmod("{bin_path}/amber", "+x")
+            }
+          }
+
+    # TODO: Convert this to amber-script-action.
+    # This includes a here-document expression, so hard to convert.
     - shell: bash
       run: |
         # Build the given script
@@ -100,7 +131,6 @@ runs:
           fi
         fi
 
-    # TODO: Convert this to amber-script-action
     - shell: bash
       run: |
         # Run the compiled script
