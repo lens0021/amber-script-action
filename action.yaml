@@ -1,16 +1,22 @@
-name: amber-script-action
-description: Run arbitrary Amber script.
+name: Amber Script
+description: Run arbitrary Amber scripts.
+branding:
+  color: orange
+  icon: code
 inputs:
   script:
+    description: The script to run
     required: true
   amber-version:
     default: 0.4.0-alpha
   enable-cache:
-    description: Whether to cache amber binary and the compiled bash script.
+    description: Whether to cache Amber binaries and the compiled bash scripts
     default: true
   cache-path:
+    description: The path to store Amber binaries and the compiled bash scripts
     default: /home/runner/.amber-script-action
   internal-eof-word:
+    description: Internal only. Do not use this.
     default: END_OF_GIVEN_AMBER_SCRIPT
 runs:
   # We make this as a composite action to reduce the maintaining cost.
