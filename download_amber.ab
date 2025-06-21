@@ -2,6 +2,7 @@ import { array_contains } from "std/array"
 import { has_failed } from "std/env"
 import { dir_create, file_chmod, file_exists, file_extract } from "std/fs"
 import { file_download } from "std/http"
+import { env_var_get } from "std/env"
 
 // copy. original: https://github.com/amber-lang/amber/blob/0.4.0-alpha/setup/shared.ab
 fun get_os(): Text {
@@ -42,7 +43,7 @@ fun get_arch(): Text {
 }
 // end copy
 
-const cache_path = "/home/runner/.amber-script-action"
+const cache_path = trust env_var_get("AMBER_CACHE_PATH")
 const bin_path = "{cache_path}/bin"
 const dest_path = "{cache_path}/dest"
 const tmp_path = "{cache_path}/tmp"
@@ -51,14 +52,15 @@ const os = get_os()
 
 if {
   file_exists("{dest_path}/script.sh") {
-    echo "::debug::A compiled bash script found. Skipping install Amber."
+    echo "::notice::A compiled bash script found. Skipping install Amber."
   } file_exists("{bin_path}/amber") {
-    echo "::debug::Amber binary found. Skipping install Amber."
+    echo "::notice::Amber binary found. Skipping install Amber."
   } else {
-    dir_create(bin_path)
     let url = "https://github.com/amber-lang/amber/releases/download/0.4.0-alpha/amber-{arch}-{os}.tar.xz"
+    dir_create(tmp_path)
     file_download(url, "{tmp_path}/amber.tar.xz")
     trust file_extract("{tmp_path}/amber.tar.xz", "{tmp_path}")
+    dir_create(bin_path)
     trust mv "{tmp_path}/amber-{arch}-{os}/amber" "{bin_path}/amber"
     file_chmod("{bin_path}/amber", "+x")
   }
