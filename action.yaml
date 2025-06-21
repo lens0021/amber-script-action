@@ -60,7 +60,8 @@ runs:
         # Download amber binary
         curl -fsSL https://raw.githubusercontent.com/lens0021/amber-script-action/313f374d9de5a9083d0d960f631ece16bb029482/download_amber.sh | bash
       env:
-        AMBER_CACHE_PATH: env.amber_cache_path
+        AMBER_CACHE_PATH: ${{ env.amber_cache_path }}
+        AMBER_VERSION: ${{ inputs.amber-version }}
     # TODO: Convert this to amber-script-action.
     # This includes a here-document expression, so hard to convert.
     - shell: bash

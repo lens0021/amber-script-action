@@ -44,6 +44,7 @@ fun get_arch(): Text {
 // end copy
 
 const cache_path = trust env_var_get("AMBER_CACHE_PATH")
+const amber_version = trust env_var_get("AMBER_VERSION")
 const bin_path = "{cache_path}/bin"
 const dest_path = "{cache_path}/dest"
 const tmp_path = "{cache_path}/tmp"
@@ -61,7 +62,7 @@ if {
     file_download(url, "{tmp_path}/amber.tar.xz")
     trust file_extract("{tmp_path}/amber.tar.xz", "{tmp_path}")
     dir_create(bin_path)
-    trust mv "{tmp_path}/amber-{arch}-{os}/amber" "{bin_path}/amber"
-    file_chmod("{bin_path}/amber", "+x")
+    trust mv "{tmp_path}/amber-{arch}-{os}/amber" "{bin_path}/amber-{amber_version}"
+    file_chmod("{bin_path}/amber-{amber_version}", "+x")
   }
 }
