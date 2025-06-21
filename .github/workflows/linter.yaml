@@ -17,4 +17,5 @@ jobs:
 
       - uses: super-linter/super-linter@v7
         env:
+          FILTER_REGEX_EXCLUDE: download_amber\.sh
           GITHUB_TOKEN: secrets.GITHUB_TOKEN
