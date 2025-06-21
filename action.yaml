@@ -59,7 +59,7 @@ runs:
     - shell: bash
       run: |
         # Download amber binary
-        curl -fsSL https://raw.githubusercontent.com/lens0021/amber-script-action/7222748395a99ca09dbdf2c5e5d9ab9ad074c79d/download_amber.sh | bash
+        curl -fsSL https://raw.githubusercontent.com/lens0021/amber-script-action/29fc96ccf29902e1eeef07a42655db43a03bf208/download_amber.sh | bash
       env:
         AMBER_CACHE_PATH: ${{ env.amber_cache_path }}
         AMBER_VERSION: ${{ inputs.amber-version }}
