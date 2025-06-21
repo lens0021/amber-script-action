@@ -1,6 +1,7 @@
 ---
 name: Linter
-on: ["push", "pull_request"]
+on:
+  - push
 permissions: read-all
 jobs:
   lint:
