@@ -13,8 +13,10 @@ inputs:
     description: Whether to cache Amber binaries and the compiled bash scripts
     default: true
   cache-path:
-    description: The path to store Amber binaries and the compiled bash scripts
-    default: /home/runner/.amber-script-action
+    description: >-
+      The path to store Amber binaries and the compiled bash scripts.
+      If empty string is given, the used path depends on the runner.
+    default: ""
   internal-eof-word:
     description: Internal only. Do not use this.
     default: END_OF_GIVEN_AMBER_SCRIPT
@@ -31,43 +33,55 @@ runs:
         ${{ inputs.script }}
         ${{ inputs.internal-eof-word }}
         } >> "$GITHUB_OUTPUT"
+    - shell: bash
+      run: |
+        # Export cache path
+        if [ ! -n ${{ inputs.cache-path }} ]; then
+          echo -n 'amber_cache_path=${{ inputs.cache-path }}' >> "$GITHUB_ENV"
+        elif [ "${{ runner.os }}" == "Linux" ]; then
+          echo -n 'amber_cache_path=/home/runner/.amber-script-action' >> "$GITHUB_ENV"
+        else
+          echo -n 'amber_cache_path=/Users/runner/.amber-script-action' >> "$GITHUB_ENV"
+        fi
     - name: Cache compiled script
       uses: actions/cache@v3
       if: inputs.enable-cache
       with:
-        path: ${{ inputs.cache-path }}/dest
+        path: ${{ env.amber_cache_path }}/dest
         key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}
     - name: Cache Amber binaries
       uses: actions/cache@v3
       if: inputs.enable-cache
       with:
-        path: ${{ inputs.cache-path }}/bin
+        path: ${{ env.amber_cache_path }}/bin
         key: amber-script-action-${{ runner.os }}-bin-${{ inputs.amber-version }}
     - shell: bash
       run: |
         # Download amber binary
         curl -fsSL https://raw.githubusercontent.com/lens0021/amber-script-action/313f374d9de5a9083d0d960f631ece16bb029482/download_amber.sh | bash
+      env:
+        AMBER_CACHE_PATH: env.amber_cache_path
     # TODO: Convert this to amber-script-action.
     # This includes a here-document expression, so hard to convert.
     - shell: bash
       run: |
         # Build the given script
-        if [ -e "${{ inputs.cache-path }}/dest/${{ steps.hash-script.outputs.hash }}.sh" ]; then
+        if [ -e "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh" ]; then
           echo "::debug::A compiled bash script found. Skip building."
         else
-          if [ ! -e "${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }}" ]; then
+          if [ ! -e "${{ env.amber_cache_path }}/bin/amber-${{ inputs.amber-version }}" ]; then
             echo "::error::No both compfiled bash script and Amber binary found after trying to install."
             exit 1
           else
-            mkdir -p "${{ inputs.cache-path }}/tmp"
-            cat <<${{ inputs.internal-eof-word }} > "${{ inputs.cache-path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab"
+            mkdir -p "${{ env.amber_cache_path }}/tmp"
+            cat <<${{ inputs.internal-eof-word }} > "${{ env.amber_cache_path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab"
         ${{ inputs.script }}
         ${{ inputs.internal-eof-word }}
-            mkdir -p "${{ inputs.cache-path }}/dest"
-            ${{ inputs.cache-path }}/bin/amber-${{ inputs.amber-version }} build "${{ inputs.cache-path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab" "${{ inputs.cache-path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
+            mkdir -p "${{ env.amber_cache_path }}/dest"
+            ${{ env.amber_cache_path }}/bin/amber-${{ inputs.amber-version }} build "${{ env.amber_cache_path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab" "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
           fi
         fi
     - shell: bash
       run: |
         # Run the compiled script
-        bash "${{ inputs.cache-path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
+        bash "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
