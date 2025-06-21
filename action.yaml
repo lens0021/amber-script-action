@@ -27,9 +27,10 @@ runs:
       shell: bash
       run: |
         # Make cache key for given script
+        # Note: macos runner does not have sha256sum.
         {
           echo -n 'hash='
-          cat <<${{ inputs.internal-eof-word }} | sha256sum | cut -d' ' -f 1
+          cat <<${{ inputs.internal-eof-word }} | openssl sha256 | cut -d' ' -f 2
         ${{ inputs.script }}
         ${{ inputs.internal-eof-word }}
         } >> "$GITHUB_OUTPUT"
@@ -58,7 +59,7 @@ runs:
     - shell: bash
       run: |
         # Download amber binary
-        curl -fsSL https://raw.githubusercontent.com/lens0021/amber-script-action/313f374d9de5a9083d0d960f631ece16bb029482/download_amber.sh | bash
+        curl -fsSL https://raw.githubusercontent.com/lens0021/amber-script-action/7222748395a99ca09dbdf2c5e5d9ab9ad074c79d/download_amber.sh | bash
       env:
         AMBER_CACHE_PATH: ${{ env.amber_cache_path }}
         AMBER_VERSION: ${{ inputs.amber-version }}
