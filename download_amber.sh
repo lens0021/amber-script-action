@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Written in [Amber](https://amber-lang.com/)
 # version: 0.4.0-alpha
-# date: 2025-06-21 10:25:45
+# date: 2025-06-21 12:11:45
 array_find__0_v0() {
 
 # bshchk (https://git.blek.codes/blek/bshchk)
-deps=('[' '[' 'return' 'true' 'bc' 'sed' 'return' 'bc' 'sed' 'return' 'return' '[' 'sed' '[' 'bc' 'sed' 'sed' 'sed' '[' '[' 'return' 'return' '[' '[' 'return' 'return' '[' '[' 'return' 'return' '[' 'bc' 'sed' 'mkdir' '[' 'chmod' 'return' 'return' '[' '[' 'tar' '[' 'return' '[' 'tar' '[' 'return' '[' 'tar' '[' 'return' '[' 'bunzip2' '[' 'return' '[' 'dpkg-deb' '[' 'return' '[' 'gunzip' '[' 'return' '[' 'unrar' '[' 'return' '[' 'rpm2cpio' 'cpio' '[' 'return' '[' 'tar' '[' 'return' '[' 'xz' '[' 'return' '[' '7z' '[' 'return' '[' 'unzip' '[' 'return' 'return' 'return' '[' '[' 'return' 'return' 'eval' 'bc' 'sed' 'return' '[' 'curl' '[' 'wget' '[' 'aria2c' 'return' 'return' 'uname' '[' 'exit' '[' '[' 'return' '[' '[' 'exit' '[' 'bc' 'sed' 'return' 'return' 'uname' '[' 'exit' '[' 'return' '[' '[' 'mv')
+deps=('[' '[' 'return' 'true' 'bc' 'sed' 'return' 'bc' 'sed' 'return' 'return' '[' 'sed' '[' 'bc' 'sed' 'sed' 'sed' '[' '[' 'return' 'return' '[' '[' 'return' 'return' '[' '[' 'return' 'return' '[' 'bc' 'sed' 'mkdir' '[' 'chmod' 'return' 'return' '[' '[' 'tar' '[' 'return' '[' 'tar' '[' 'return' '[' 'tar' '[' 'return' '[' 'bunzip2' '[' 'return' '[' 'dpkg-deb' '[' 'return' '[' 'gunzip' '[' 'return' '[' 'unrar' '[' 'return' '[' 'rpm2cpio' 'cpio' '[' 'return' '[' 'tar' '[' 'return' '[' 'xz' '[' 'return' '[' '7z' '[' 'return' '[' 'unzip' '[' 'return' 'return' 'return' '[' 'return' 'return' '[' '[' 'return' 'return' 'eval' 'bc' 'sed' 'return' '[' 'curl' '[' 'wget' '[' 'aria2c' 'return' 'return' 'uname' '[' 'exit' '[' '[' 'return' '[' '[' 'exit' '[' 'bc' 'sed' 'return' 'return' 'uname' '[' 'exit' '[' 'return' '[' '[' 'mv')
 non_ok=()
 
 for d in $deps
@@ -268,6 +268,17 @@ file_extract__54_v0() {
         return 2
     fi
 }
+env_var_get__101_v0() {
+    local name=$1
+    __AMBER_VAL_2=$(echo ${!name})
+    __AS=$?
+    if [ $__AS != 0 ]; then
+        __AF_env_var_get101_v0=''
+        return $__AS
+    fi
+    __AF_env_var_get101_v0="${__AMBER_VAL_2}"
+    return 0
+}
 is_command__103_v0() {
     local command=$1
     [ -x "$(command -v ${command})" ]
@@ -312,21 +323,21 @@ file_download__150_v0() {
     return 0
 }
 # copy. original: https://github.com/amber-lang/amber/blob/0.4.0-alpha/setup/shared.ab
-get_os__152_v0() {
+get_os__153_v0() {
     # Determine OS type
-    __AMBER_VAL_2=$(uname -s)
+    __AMBER_VAL_3=$(uname -s)
     __AS=$?
     if [ $__AS != 0 ]; then
         echo "Failed to determine OS type (using \`uname\` command)."
         echo "Please try again or make sure you have it installed."
         exit 1
     fi
-    local os_type="${__AMBER_VAL_2}"
+    local os_type="${__AMBER_VAL_3}"
     if [ $(
         [ "_${os_type}" != "_Darwin" ]
         echo $?
     ) != 0 ]; then
-        __AF_get_os152_v0="apple-darwin"
+        __AF_get_os153_v0="apple-darwin"
         return 0
     fi
     if [ $(
@@ -338,65 +349,71 @@ get_os__152_v0() {
         exit 1
     fi
     has_failed__107_v0 "ls -l /lib | grep libc.musl"
-    __AF_has_failed107_v0__23_10="$__AF_has_failed107_v0"
-    if [ $(echo '!' "$__AF_has_failed107_v0__23_10" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//') != 0 ]; then
-        __AF_get_os152_v0="unknown-linux-musl"
+    __AF_has_failed107_v0__24_10="$__AF_has_failed107_v0"
+    if [ $(echo '!' "$__AF_has_failed107_v0__24_10" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//') != 0 ]; then
+        __AF_get_os153_v0="unknown-linux-musl"
         return 0
     fi
-    __AF_get_os152_v0="unknown-linux-gnu"
+    __AF_get_os153_v0="unknown-linux-gnu"
     return 0
 }
-get_arch__153_v0() {
+get_arch__154_v0() {
     # Determine architecture
-    __AMBER_VAL_3=$(uname -m)
+    __AMBER_VAL_4=$(uname -m)
     __AS=$?
     if [ $__AS != 0 ]; then
         echo "Failed to determine architecture."
         echo "Please try again or use another download method."
         exit 1
     fi
-    local arch_type="${__AMBER_VAL_3}"
-    __AMBER_ARRAY_4=("arm64" "aarch64")
-    array_contains__2_v0 __AMBER_ARRAY_4[@] "${arch_type}"
-    __AF_array_contains2_v0__37_14="$__AF_array_contains2_v0"
-    local arch=$(if [ "$__AF_array_contains2_v0__37_14" != 0 ]; then echo "aarch64"; else echo "x86_64"; fi)
-    __AF_get_arch153_v0="${arch}"
+    local arch_type="${__AMBER_VAL_4}"
+    __AMBER_ARRAY_5=("arm64" "aarch64")
+    array_contains__2_v0 __AMBER_ARRAY_5[@] "${arch_type}"
+    __AF_array_contains2_v0__38_14="$__AF_array_contains2_v0"
+    local arch=$(if [ "$__AF_array_contains2_v0__38_14" != 0 ]; then echo "aarch64"; else echo "x86_64"; fi)
+    __AF_get_arch154_v0="${arch}"
     return 0
 }
 # end copy
-__0_cache_path="/home/runner/.amber-script-action"
+env_var_get__101_v0 "AMBER_CACHE_PATH"
+__AS=$?
+__AF_env_var_get101_v0__46_26="${__AF_env_var_get101_v0}"
+__0_cache_path="${__AF_env_var_get101_v0__46_26}"
 __1_bin_path="${__0_cache_path}/bin"
 __2_dest_path="${__0_cache_path}/dest"
 __3_tmp_path="${__0_cache_path}/tmp"
-get_arch__153_v0
-__AF_get_arch153_v0__49_14="${__AF_get_arch153_v0}"
-__4_arch="${__AF_get_arch153_v0__49_14}"
-get_os__152_v0
-__AF_get_os152_v0__50_12="${__AF_get_os152_v0}"
-__5_os="${__AF_get_os152_v0__50_12}"
+get_arch__154_v0
+__AF_get_arch154_v0__50_14="${__AF_get_arch154_v0}"
+__4_arch="${__AF_get_arch154_v0__50_14}"
+get_os__153_v0
+__AF_get_os153_v0__51_12="${__AF_get_os153_v0}"
+__5_os="${__AF_get_os153_v0__51_12}"
 file_exists__43_v0 "${__2_dest_path}/script.sh"
-__AF_file_exists43_v0__53_3="$__AF_file_exists43_v0"
+__AF_file_exists43_v0__54_3="$__AF_file_exists43_v0"
 file_exists__43_v0 "${__1_bin_path}/amber"
-__AF_file_exists43_v0__55_5="$__AF_file_exists43_v0"
-if [ "$__AF_file_exists43_v0__53_3" != 0 ]; then
-    echo "::debug::A compiled bash script found. Skipping install Amber."
-elif [ "$__AF_file_exists43_v0__55_5" != 0 ]; then
-    echo "::debug::Amber binary found. Skipping install Amber."
+__AF_file_exists43_v0__56_5="$__AF_file_exists43_v0"
+if [ "$__AF_file_exists43_v0__54_3" != 0 ]; then
+    echo "::notice::A compiled bash script found. Skipping install Amber."
+elif [ "$__AF_file_exists43_v0__56_5" != 0 ]; then
+    echo "::notice::Amber binary found. Skipping install Amber."
 else
-    dir_create__48_v0 "${__1_bin_path}"
-    __AF_dir_create48_v0__58_5="$__AF_dir_create48_v0"
-    echo "$__AF_dir_create48_v0__58_5" >/dev/null 2>&1
     url="https://github.com/amber-lang/amber/releases/download/0.4.0-alpha/amber-${__4_arch}-${__5_os}.tar.xz"
+    dir_create__48_v0 "${__3_tmp_path}"
+    __AF_dir_create48_v0__60_5="$__AF_dir_create48_v0"
+    echo "$__AF_dir_create48_v0__60_5" >/dev/null 2>&1
     file_download__150_v0 "${url}" "${__3_tmp_path}/amber.tar.xz"
-    __AF_file_download150_v0__60_5="$__AF_file_download150_v0"
-    echo "$__AF_file_download150_v0__60_5" >/dev/null 2>&1
+    __AF_file_download150_v0__61_5="$__AF_file_download150_v0"
+    echo "$__AF_file_download150_v0__61_5" >/dev/null 2>&1
     file_extract__54_v0 "${__3_tmp_path}/amber.tar.xz" "${__3_tmp_path}"
     __AS=$?
-    __AF_file_extract54_v0__61_11="$__AF_file_extract54_v0"
-    echo "$__AF_file_extract54_v0__61_11" >/dev/null 2>&1
+    __AF_file_extract54_v0__62_11="$__AF_file_extract54_v0"
+    echo "$__AF_file_extract54_v0__62_11" >/dev/null 2>&1
+    dir_create__48_v0 "${__1_bin_path}"
+    __AF_dir_create48_v0__63_5="$__AF_dir_create48_v0"
+    echo "$__AF_dir_create48_v0__63_5" >/dev/null 2>&1
     mv "${__3_tmp_path}/amber-${__4_arch}-${__5_os}/amber" "${__1_bin_path}/amber"
     __AS=$?
     file_chmod__49_v0 "${__1_bin_path}/amber" "+x"
-    __AF_file_chmod49_v0__63_5="$__AF_file_chmod49_v0"
-    echo "$__AF_file_chmod49_v0__63_5" >/dev/null 2>&1
+    __AF_file_chmod49_v0__65_5="$__AF_file_chmod49_v0"
+    echo "$__AF_file_chmod49_v0__65_5" >/dev/null 2>&1
 fi
