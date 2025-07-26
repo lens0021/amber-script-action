@@ -30,7 +30,7 @@ runs:
         # Note: macos runner does not have sha256sum.
         {
           echo -n 'hash='
-          cat <<${{ inputs.internal-eof-word }} | openssl sha256 | cut -d' ' -f 2
+          cat <<'${{ inputs.internal-eof-word }}' | openssl sha256 | cut -d' ' -f 2
         ${{ inputs.script }}
         ${{ inputs.internal-eof-word }}
         } >> "$GITHUB_OUTPUT"
