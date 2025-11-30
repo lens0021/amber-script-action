@@ -478,11 +478,7 @@ else
         exit "${__status}"
     fi
     if [ "$([ "_${amber_version_4}" != "_0.5.0-alpha" ]; echo $?)" != 0 ]; then
-        replace__12_v0 "${os_15}" "unknown-" ""
-        ret_replace12_v0__80_41="${ret_replace12_v0}"
-        replace__12_v0 "${ret_replace12_v0__80_41}" "apple-darwin" "macos"
-        ret_replace12_v0__80_33="${ret_replace12_v0}"
-        mv "${tmp_path_7}/amber-${ret_replace12_v0__80_33}-${arch_13}/amber" "${bin_path_5}/amber-${amber_version_4}"
+        mv "${tmp_path_7}/amber" "${bin_path_5}/amber-${amber_version_4}"
         __status=$?
         if [ "${__status}" != 0 ]; then
             exit "${__status}"

@@ -77,7 +77,7 @@ main {
       dir_create(bin_path)?
       if {
         amber_version == "0.5.0-alpha":
-          mv "{tmp_path}/amber-{replace(replace(os, "unknown-", ""), "apple-darwin", "macos")}-{arch}/amber" "{bin_path}/amber-{amber_version}"?
+          mv "{tmp_path}/amber" "{bin_path}/amber-{amber_version}"?
         else:
           mv "{tmp_path}/amber-{arch}-{os}/amber" "{bin_path}/amber-{amber_version}"?
       }
