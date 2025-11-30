@@ -1,8 +1,8 @@
 import { array_contains } from "std/array"
-import { has_failed } from "std/env"
+import { env_var_get, has_failed } from "std/env"
 import { dir_create, file_chmod, file_exists, file_extract } from "std/fs"
 import { file_download } from "std/http"
-import { env_var_get } from "std/env"
+import { replace } from "std/text"
 
 // copy. original: https://github.com/amber-lang/amber/blob/0.4.0-alpha/setup/shared.ab
 fun get_os(): Text {
@@ -51,16 +51,22 @@ const tmp_path = "{cache_path}/tmp"
 const arch = get_arch()
 const os = get_os()
 
-main(argv) {
+main {
   if {
     file_exists("{dest_path}/script.sh") {
       echo "::notice::A compiled bash script found. Skipping install Amber."
     } file_exists("{bin_path}/amber") {
       echo "::notice::Amber binary found. Skipping install Amber."
     } else {
-      let url = "https://github.com/amber-lang/amber/releases/download/0.4.0-alpha/amber-{arch}-{os}.tar.xz"
-      dir_create(tmp_path)
-      file_download(url, "{tmp_path}/amber.tar.xz")
+      let url = ""
+      if {
+        amber_version == "0.5.0-alpha":
+          url = "https://github.com/amber-lang/amber/releases/download/{amber_version}/amber-{replace(replace(os, "unknown-", ""), "apple-darwin", "macos")}-{arch}.tar.xz"
+        else:
+          url = "https://github.com/amber-lang/amber/releases/download/{amber_version}/amber-{arch}-{os}.tar.xz"
+      }
+      dir_create(tmp_path)?
+      file_download(url, "{tmp_path}/amber.tar.xz")?
       if os == "apple-darwin" {
         // There is a bug
         trust file_extract("{tmp_path}/amber.tar.xz", "{tmp_path}")
@@ -68,9 +74,14 @@ main(argv) {
       } else {
         trust file_extract("{tmp_path}/amber.tar.xz", "{tmp_path}")
       }
-      dir_create(bin_path)
-      mv "{tmp_path}/amber-{arch}-{os}/amber" "{bin_path}/amber-{amber_version}"?
-      file_chmod("{bin_path}/amber-{amber_version}", "+x")
+      dir_create(bin_path)?
+      if {
+        amber_version == "0.5.0-alpha":
+          mv "{tmp_path}/amber" "{bin_path}/amber-{amber_version}"?
+        else:
+          mv "{tmp_path}/amber-{arch}-{os}/amber" "{bin_path}/amber-{amber_version}"?
+      }
+      file_chmod("{bin_path}/amber-{amber_version}", "+x")?
     }
   }
 }
