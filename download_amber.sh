@@ -477,10 +477,22 @@ else
     if [ "${__status}" != 0 ]; then
         exit "${__status}"
     fi
-    mv "${tmp_path_7}/amber-${arch_13}-${os_15}/amber" "${bin_path_5}/amber-${amber_version_4}"
-    __status=$?
-    if [ "${__status}" != 0 ]; then
-        exit "${__status}"
+    if [ "$([ "_${amber_version_4}" != "_0.5.0-alpha" ]; echo $?)" != 0 ]; then
+        replace__12_v0 "${os_15}" "unknown-" ""
+        ret_replace12_v0__80_41="${ret_replace12_v0}"
+        replace__12_v0 "${ret_replace12_v0__80_41}" "apple-darwin" "macos"
+        ret_replace12_v0__80_33="${ret_replace12_v0}"
+        mv "${tmp_path_7}/amber-${ret_replace12_v0__80_33}-${arch_13}/amber" "${bin_path_5}/amber-${amber_version_4}"
+        __status=$?
+        if [ "${__status}" != 0 ]; then
+            exit "${__status}"
+        fi
+    else
+        mv "${tmp_path_7}/amber-${arch_13}-${os_15}/amber" "${bin_path_5}/amber-${amber_version_4}"
+        __status=$?
+        if [ "${__status}" != 0 ]; then
+            exit "${__status}"
+        fi
     fi
     file_chmod__56_v0 "${bin_path_5}/amber-${amber_version_4}" "+x"
     __status=$?
