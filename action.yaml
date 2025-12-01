@@ -54,7 +54,7 @@ runs:
       with:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
-        cache-path: ${{ inputs.cache-path }}
+        cache-path: ${{ env.amber_cache_path }}
         bin-path: ${{ env.amber_cache_path }}/bin/amber-${{ inputs.amber-version }}
     # TODO: Convert this to amber-script-action.
     # This includes a here-document expression, so hard to convert.
