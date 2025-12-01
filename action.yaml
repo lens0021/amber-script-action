@@ -50,19 +50,12 @@ runs:
       with:
         path: ${{ env.amber_cache_path }}/dest
         key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}
-    - name: Cache Amber binaries
-      uses: actions/cache@v3
-      if: inputs.enable-cache
+    - uses: lens0021/setup-amber@ef483e92d1524f089fb18ddc0b0d7949123073d7 # v1.1.0
       with:
-        path: ${{ env.amber_cache_path }}/bin
-        key: amber-script-action-${{ runner.os }}-bin-${{ inputs.amber-version }}
-    - shell: bash
-      run: |
-        # Download amber binary
-        curl -fsSL https://raw.githubusercontent.com/lens0021/amber-script-action/4b84a912f394571858d21746d24d14cfbd8af4f1/download_amber.sh | bash
-      env:
-        AMBER_CACHE_PATH: ${{ env.amber_cache_path }}
-        AMBER_VERSION: ${{ inputs.amber-version }}
+        amber-version: ${{ inputs.amber-version }}
+        enable-cache: ${{ inputs.enable-cache }}
+        cache-path: ${{ env.amber_cache_path }}/actions/setup-amber
+        bin-path: ${{ env.amber_cache_path }}/bin/amber-${{ inputs.amber-version }}
     # TODO: Convert this to amber-script-action.
     # This includes a here-document expression, so hard to convert.
     - shell: bash
@@ -71,17 +64,12 @@ runs:
         if [ -e "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh" ]; then
           echo "::debug::A compiled bash script found. Skip building."
         else
-          if [ ! -e "${{ env.amber_cache_path }}/bin/amber-${{ inputs.amber-version }}" ]; then
-            echo "::error::No both compfiled bash script and Amber binary found after trying to install."
-            exit 1
-          else
-            mkdir -p "${{ env.amber_cache_path }}/tmp"
-            cat <<${{ inputs.internal-eof-word }} > "${{ env.amber_cache_path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab"
+          mkdir -p "${{ env.amber_cache_path }}/tmp"
+          cat <<${{ inputs.internal-eof-word }} > "${{ env.amber_cache_path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab"
         ${{ inputs.script }}
         ${{ inputs.internal-eof-word }}
-            mkdir -p "${{ env.amber_cache_path }}/dest"
-            ${{ env.amber_cache_path }}/bin/amber-${{ inputs.amber-version }} build "${{ env.amber_cache_path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab" "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
-          fi
+          mkdir -p "${{ env.amber_cache_path }}/dest"
+          "${{ env.amber_cache_path }}/bin/amber-${{ inputs.amber-version }}" build "${{ env.amber_cache_path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab" "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
         fi
     - shell: bash
       run: |
