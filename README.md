@@ -9,7 +9,7 @@ Inspired by [actions/github-script].
 > This is a [composite action] because I want less maintaining costs.
 > There is a limitation of composite action itself:
 >
-> - Name of steps are not displayed. ([link](https://github.com/orgs/community/discussions/10985))
+> - Name of steps are not displayed. ([GitHub discussion](https://github.com/orgs/community/discussions/10985))
 
 ## Usage
 
