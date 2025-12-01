@@ -25,24 +25,27 @@ runs:
   steps:
     - id: hash-script
       shell: bash
+      env:
+        SCRIPT_CONTENT: ${{ inputs.script }}
+        EOF_WORD: ${{ inputs.internal-eof-word }}
       run: |
         # Make cache key for given script
         # Note: macos runner does not have sha256sum.
         {
           echo -n 'hash='
-          cat <<'${{ inputs.internal-eof-word }}' | openssl sha256 | cut -d' ' -f 2
-        ${{ inputs.script }}
-        ${{ inputs.internal-eof-word }}
+          printf '%s\n' "$SCRIPT_CONTENT" | openssl sha256 | cut -d' ' -f 2
         } >> "$GITHUB_OUTPUT"
     - shell: bash
+      env:
+        CACHE_PATH_INPUT: ${{ inputs.cache-path }}
       run: |
         # Export cache path
-        if [ ! -n ${{ inputs.cache-path }} ]; then
-          echo -n 'amber_cache_path=${{ inputs.cache-path }}' >> "$GITHUB_ENV"
+        if [ -n "$CACHE_PATH_INPUT" ]; then
+          echo "amber_cache_path=$CACHE_PATH_INPUT" >> "$GITHUB_ENV"
         elif [ "${{ runner.os }}" == "Linux" ]; then
-          echo -n 'amber_cache_path=/home/runner/.amber-script-action' >> "$GITHUB_ENV"
+          echo "amber_cache_path=/home/runner/.amber-script-action" >> "$GITHUB_ENV"
         else
-          echo -n 'amber_cache_path=/Users/runner/.amber-script-action' >> "$GITHUB_ENV"
+          echo "amber_cache_path=/Users/runner/.amber-script-action" >> "$GITHUB_ENV"
         fi
     - name: Cache compiled script
       uses: actions/cache@v3
@@ -59,19 +62,25 @@ runs:
     # TODO: Convert this to amber-script-action.
     # This includes a here-document expression, so hard to convert.
     - shell: bash
+      env:
+        AMBER_CACHE_PATH: ${{ env.amber_cache_path }}
+        SCRIPT_CONTENT: ${{ inputs.script }}
+        AMBER_VERSION: ${{ inputs.amber-version }}
+        SCRIPT_HASH: ${{ steps.hash-script.outputs.hash }}
       run: |
         # Build the given script
-        if [ -e "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh" ]; then
+        if [ -e "${AMBER_CACHE_PATH}/dest/${SCRIPT_HASH}.sh" ]; then
           echo "::debug::A compiled bash script found. Skip building."
         else
-          mkdir -p "${{ env.amber_cache_path }}/tmp"
-          cat <<${{ inputs.internal-eof-word }} > "${{ env.amber_cache_path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab"
-        ${{ inputs.script }}
-        ${{ inputs.internal-eof-word }}
-          mkdir -p "${{ env.amber_cache_path }}/dest"
-          "${{ env.amber_cache_path }}/bin/amber-${{ inputs.amber-version }}" build "${{ env.amber_cache_path }}/tmp/${{ steps.hash-script.outputs.hash }}.ab" "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
+          mkdir -p "${AMBER_CACHE_PATH}/tmp"
+          printf '%s\n' "$SCRIPT_CONTENT" > "${AMBER_CACHE_PATH}/tmp/${SCRIPT_HASH}.ab"
+          mkdir -p "${AMBER_CACHE_PATH}/dest"
+          "${AMBER_CACHE_PATH}/bin/amber-${AMBER_VERSION}" build "${AMBER_CACHE_PATH}/tmp/${SCRIPT_HASH}.ab" "${AMBER_CACHE_PATH}/dest/${SCRIPT_HASH}.sh"
         fi
     - shell: bash
+      env:
+        AMBER_CACHE_PATH: ${{ env.amber_cache_path }}
+        SCRIPT_HASH: ${{ steps.hash-script.outputs.hash }}
       run: |
         # Run the compiled script
-        bash "${{ env.amber_cache_path }}/dest/${{ steps.hash-script.outputs.hash }}.sh"
+        bash "${AMBER_CACHE_PATH}/dest/${SCRIPT_HASH}.sh"
