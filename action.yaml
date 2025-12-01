@@ -41,7 +41,11 @@ runs:
       run: |
         # Export cache path
         if [ -n "$CACHE_PATH_INPUT" ]; then
-          echo "amber_cache_path=$CACHE_PATH_INPUT" >> "$GITHUB_ENV"
+          {
+            echo "amber_cache_path<<CACHE_PATH_EOF"
+            echo "$CACHE_PATH_INPUT"
+            echo "CACHE_PATH_EOF"
+          } >> "$GITHUB_ENV"
         elif [ "${{ runner.os }}" == "Linux" ]; then
           echo "amber_cache_path=/home/runner/.amber-script-action" >> "$GITHUB_ENV"
         else
