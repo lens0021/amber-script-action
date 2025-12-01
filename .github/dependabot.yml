@@ -12,6 +12,3 @@ updates:
       github-actions:
         patterns:
           - "*"
-    labels:
-      - dependencies
-      - github-actions
