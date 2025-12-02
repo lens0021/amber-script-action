@@ -52,7 +52,7 @@ runs:
           echo "amber_cache_path=/Users/runner/.amber-script-action" >> "$GITHUB_ENV"
         fi
     - name: Cache compiled script
-      uses: actions/cache@v4
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       if: inputs.enable-cache
       with:
         path: ${{ env.amber_cache_path }}/dest
