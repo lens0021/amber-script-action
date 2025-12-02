@@ -17,9 +17,6 @@ inputs:
       The path to store Amber binaries and the compiled bash scripts.
       If empty string is given, the used path depends on the runner.
     default: ""
-  internal-eof-word:
-    description: Internal only. Do not use this.
-    default: END_OF_GIVEN_AMBER_SCRIPT
 runs:
   using: composite
   steps:
@@ -27,7 +24,6 @@ runs:
       shell: bash
       env:
         SCRIPT_CONTENT: ${{ inputs.script }}
-        EOF_WORD: ${{ inputs.internal-eof-word }}
       run: |
         # Make cache key for given script
         # Note: macos runner does not have sha256sum.
