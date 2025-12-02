@@ -8,7 +8,7 @@ inputs:
     description: The script to run
     required: true
   amber-version:
-    default: 0.4.0-alpha
+    default: 0.5.1-alpha
   enable-cache:
     description: Whether to cache Amber binaries and the compiled bash scripts
     default: true
