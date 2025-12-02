@@ -57,7 +57,7 @@ runs:
       with:
         path: ${{ env.amber_cache_path }}/dest
         key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}
-    - uses: lens0021/setup-amber@ef483e92d1524f089fb18ddc0b0d7949123073d7 # v1.1.0
+    - uses: lens0021/setup-amber@2e13727a77c839ecb407da90736cc07b8d68cd42 # v1.1.0
       with:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
