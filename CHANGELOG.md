@@ -14,6 +14,6 @@
 * Update default amber-version to 0.5.1-alpha ([#48](https://github.com/lens0021/amber-script-action/issues/48)) ([c792ee1](https://github.com/lens0021/amber-script-action/commit/c792ee1d8ce19037c28108f03c5c03d968c710fd))
 
 
-### Bug Fixes
+### Bugfixes
 
 * Address security vulnerabilities found by zizmor ([#41](https://github.com/lens0021/amber-script-action/issues/41)) ([bedb067](https://github.com/lens0021/amber-script-action/commit/bedb067ed45201913354a07a00660c2cce15f8af))
