@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/lens0021/amber-script-action/compare/v2.0.0...v2.0.1) (2025-12-08)
+
+
+### Bug Fixes
+
+* Add AMBER_SCRIPT_ prefix to environment variables ([#51](https://github.com/lens0021/amber-script-action/issues/51)) ([0dbcf86](https://github.com/lens0021/amber-script-action/commit/0dbcf865d136b147e15ced821467b8c180288213))
+
 ## [2.0.0](https://github.com/lens0021/amber-script-action/compare/v1.1.1...v2.0.0) (2025-12-05)
 
 
