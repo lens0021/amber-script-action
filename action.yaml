@@ -33,14 +33,14 @@ runs:
         cache-path: ${{ inputs.cache-path != '' && format('{0}/actions/setup-amber', inputs.cache-path) || (runner.os == 'Linux' && '/home/runner/.amber-script-action/actions/setup-amber' || '/Users/runner/.amber-script-action/actions/setup-amber') }}
         bin-path: ${{ inputs.cache-path != '' && format('{0}/bin/amber-{1}', inputs.cache-path, inputs.amber-version) || (runner.os == 'Linux' && format('/home/runner/.amber-script-action/bin/amber-{0}', inputs.amber-version) || format('/Users/runner/.amber-script-action/bin/amber-{0}', inputs.amber-version)) }}
     - name: Build and run script
-      uses: lens0021/amber-script-action@31ab14026ac16a3d93bc20767087084ce5344517 # v1.1.1
+      uses: lens0021/amber-script-action@014375f0b64132ead405709f11653f95c6aa1652 # v2.0.0
       env:
         AMBER_SCRIPT_CACHE_PATH_INPUT: ${{ inputs.cache-path }}
         AMBER_SCRIPT_RUNNER_OS: ${{ runner.os }}
         AMBER_SCRIPT_CONTENT: ${{ inputs.script }}
         AMBER_SCRIPT_VERSION: ${{ inputs.amber-version }}
       with:
-        amber-version: 0.5.0-alpha
+        amber-version: 0.5.1-alpha
         script: |
           import { trim } from "std/text"
           import { env_var_get } from "std/env"
