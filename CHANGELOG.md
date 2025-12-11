@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/lens0021/amber-script-action/compare/v2.0.1...v2.0.2) (2025-12-11)
+
+
+### Bug Fixes
+
+* Bundle compiled bash script ([#55](https://github.com/lens0021/amber-script-action/issues/55)) ([9461610](https://github.com/lens0021/amber-script-action/commit/9461610e10a8edf4a44384d3e3a82b6a580e257b))
+
 ## [2.0.1](https://github.com/lens0021/amber-script-action/compare/v2.0.0...v2.0.1) (2025-12-08)
 
 
