@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/lens0021/amber-script-action/compare/v2.0.2...v2.0.3) (2025-12-11)
+
+
+### Bug Fixes
+
+* **internal:** Rename dest directory to dist ([#58](https://github.com/lens0021/amber-script-action/issues/58)) ([259c6fb](https://github.com/lens0021/amber-script-action/commit/259c6fb87831c5fe8cfca91a98e28c43a1824db1))
+
 ## [2.0.2](https://github.com/lens0021/amber-script-action/compare/v2.0.1...v2.0.2) (2025-12-11)
 
 
