@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.4](https://github.com/lens0021/amber-script-action/compare/v2.0.3...v2.0.4) (2025-12-11)
+
+
+### Bug Fixes
+
+* Typo in action.yaml from 'distame' to 'name' ([#60](https://github.com/lens0021/amber-script-action/issues/60)) ([1094c5a](https://github.com/lens0021/amber-script-action/commit/1094c5ae6f4a3a3b745dc0b573e1b9b3c1756558))
+
 ## [2.0.3](https://github.com/lens0021/amber-script-action/compare/v2.0.2...v2.0.3) (2025-12-11)
 
 
