@@ -26,63 +26,18 @@ runs:
       with:
         path: ${{ inputs.cache-path != '' && format('{0}/dest', inputs.cache-path) || (runner.os == 'Linux' && '/home/runner/.amber-script-action/dest' || '/Users/runner/.amber-script-action/dest') }}
         key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}
-    - uses: lens0021/setup-amber@2e13727a77c839ecb407da90736cc07b8d68cd42 # v1.1.0
+    - uses: lens0021/setup-amber@014375f0b64132ead405709f11653f95c6aa1652 # v2.0.0
       with:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
         cache-path: ${{ inputs.cache-path != '' && format('{0}/actions/setup-amber', inputs.cache-path) || (runner.os == 'Linux' && '/home/runner/.amber-script-action/actions/setup-amber' || '/Users/runner/.amber-script-action/actions/setup-amber') }}
         bin-path: ${{ inputs.cache-path != '' && format('{0}/bin/amber-{1}', inputs.cache-path, inputs.amber-version) || (runner.os == 'Linux' && format('/home/runner/.amber-script-action/bin/amber-{0}', inputs.amber-version) || format('/Users/runner/.amber-script-action/bin/amber-{0}', inputs.amber-version)) }}
-    - name: Build and run script
-      uses: lens0021/amber-script-action@31ab14026ac16a3d93bc20767087084ce5344517 # v1.1.1
+    - shell: bash
       env:
         AMBER_SCRIPT_CACHE_PATH_INPUT: ${{ inputs.cache-path }}
         AMBER_SCRIPT_RUNNER_OS: ${{ runner.os }}
         AMBER_SCRIPT_CONTENT: ${{ inputs.script }}
         AMBER_SCRIPT_VERSION: ${{ inputs.amber-version }}
-      with:
-        amber-version: 0.5.0-alpha
-        script: |
-          import { trim } from "std/text"
-          import { env_var_get } from "std/env"
-          import { dir_create, file_exists, file_write } from "std/fs"
-
-          // Calculate cache path
-          const cache_path_input = trust env_var_get("AMBER_SCRIPT_CACHE_PATH_INPUT")
-          const runner_os = trust env_var_get("AMBER_SCRIPT_RUNNER_OS")
-          const amber_cache_path = trim(cache_path_input) != ""
-            then cache_path_input
-            else runner_os == "Linux"
-              then "/home/runner/.amber-script-action"
-              else "/Users/runner/.amber-script-action"
-
-          const script_content = trust env_var_get("AMBER_SCRIPT_CONTENT")
-          const amber_version = trust env_var_get("AMBER_SCRIPT_VERSION")
-
-          // Calculate hash for the given script
-          // Note: macos runner does not have sha256sum.
-          let script_hash = $ printf '%s\n' "{script_content}" | openssl sha256 | cut -d' ' -f 2 $ failed(code) {
-            echo "Failed to calculate script hash"
-            exit code
-          }
-
-          const dest_path = "{amber_cache_path}/dest/{script_hash}.sh"
-
-          // Build the given script
-          if file_exists(dest_path) {
-            echo "::debug::A compiled bash script found. Skip building."
-          } else {
-            trust dir_create("{amber_cache_path}/tmp")
-            trust file_write("{amber_cache_path}/tmp/{script_hash}.ab", script_content)
-            trust dir_create("{amber_cache_path}/dest")
-
-            $ "{amber_cache_path}/bin/amber-{amber_version}" build "{amber_cache_path}/tmp/{script_hash}.ab" "{dest_path}" $ failed(code) {
-              echo "Failed to build script with exit code {code}"
-              exit code
-            }
-          }
-
-          // Run the compiled script
-          $ bash "{dest_path}" $ failed(code) {
-            echo "Failed to run script with exit code {code}"
-            exit code
-          }
+      run: |
+        # Build and run script
+        bash "${{ github.action_path }}/dist/main.sh"
