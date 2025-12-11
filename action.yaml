@@ -1,4 +1,4 @@
-distame: Amber Script
+name: Amber Script
 description: Run arbitrary Amber scripts.
 branding:
   color: orange
