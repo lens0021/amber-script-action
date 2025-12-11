@@ -31,7 +31,7 @@ if file_exists(dest_path) {
   trust file_write("{amber_cache_path}/tmp/{script_hash}.ab", script_content)
   trust dir_create("{amber_cache_path}/dest")
 
-  $ "{amber_cache_path}/bin/amber-{amber_version}" build "{amber_cache_path}/tmp/{script_hash}.ab" "{dest_path}" $ failed(code) {
+  $ "{amber_cache_path}/bin/amber-{amber_version}/amber" build "{amber_cache_path}/tmp/{script_hash}.ab" "{dest_path}" $ failed(code) {
     echo "Failed to build script with exit code {code}"
     exit code
   }

@@ -123,7 +123,7 @@ else
     __status=$?
     dir_create__43_v0 "${amber_cache_path_5}/dest"
     __status=$?
-    "${amber_cache_path_5}/bin/amber-${amber_version_7}" build "${amber_cache_path_5}/tmp/${script_hash_9}.ab" "${dest_path_10}"
+    "${amber_cache_path_5}/bin/amber-${amber_version_7}/amber" build "${amber_cache_path_5}/tmp/${script_hash_9}.ab" "${dest_path_10}"
     __status=$?
     if [ "${__status}" != 0 ]; then
     code_11="${__status}"
