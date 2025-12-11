@@ -1,0 +1,44 @@
+import { trim } from "std/text"
+import { env_var_get } from "std/env"
+import { dir_create, file_exists, file_write } from "std/fs"
+
+// Calculate cache path
+const cache_path_input = trust env_var_get("AMBER_SCRIPT_CACHE_PATH_INPUT")
+const runner_os = trust env_var_get("AMBER_SCRIPT_RUNNER_OS")
+const amber_cache_path = trim(cache_path_input) != ""
+  then cache_path_input
+  else runner_os == "Linux"
+    then "/home/runner/.amber-script-action"
+    else "/Users/runner/.amber-script-action"
+
+const script_content = trust env_var_get("AMBER_SCRIPT_CONTENT")
+const amber_version = trust env_var_get("AMBER_SCRIPT_VERSION")
+
+// Calculate hash for the given script
+// Note: macos runner does not have sha256sum.
+let script_hash = $ printf '%s\n' "{script_content}" | openssl sha256 | cut -d' ' -f 2 $ failed(code) {
+  echo "Failed to calculate script hash"
+  exit code
+}
+
+const dest_path = "{amber_cache_path}/dest/{script_hash}.sh"
+
+// Build the given script
+if file_exists(dest_path) {
+  echo "::debug::A compiled bash script found. Skip building."
+} else {
+  trust dir_create("{amber_cache_path}/tmp")
+  trust file_write("{amber_cache_path}/tmp/{script_hash}.ab", script_content)
+  trust dir_create("{amber_cache_path}/dest")
+
+  $ "{amber_cache_path}/bin/amber-{amber_version}" build "{amber_cache_path}/tmp/{script_hash}.ab" "{dest_path}" $ failed(code) {
+    echo "Failed to build script with exit code {code}"
+    exit code
+  }
+}
+
+// Run the compiled script
+$ bash "{dest_path}" $ failed(code) {
+  echo "Failed to run script with exit code {code}"
+  exit code
+}
