@@ -26,7 +26,7 @@ runs:
       with:
         path: ${{ inputs.cache-path != '' && format('{0}/dest', inputs.cache-path) || (runner.os == 'Linux' && '/home/runner/.amber-script-action/dest' || '/Users/runner/.amber-script-action/dest') }}
         key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}
-    - uses: lens0021/setup-amber@2e13727a77c839ecb407da90736cc07b8d68cd42 # v1.1.0
+    - uses: lens0021/setup-amber@014375f0b64132ead405709f11653f95c6aa1652 # v2.0.0
       with:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
