@@ -110,9 +110,9 @@ code_8="${__status}"
     exit "${code_8}"
 fi
 script_hash_9="${command_4}"
-dest_path_10="${amber_cache_path_5}/dest/${script_hash_9}.sh"
+dist_path_10="${amber_cache_path_5}/dist/${script_hash_9}.sh"
 # Build the given script
-file_exists__38_v0 "${dest_path_10}"
+file_exists__38_v0 "${dist_path_10}"
 ret_file_exists38_v0__27_4="${ret_file_exists38_v0}"
 if [ "${ret_file_exists38_v0__27_4}" != 0 ]; then
     echo "::debug::A compiled bash script found. Skip building."
@@ -121,9 +121,9 @@ else
     __status=$?
     file_write__40_v0 "${amber_cache_path_5}/tmp/${script_hash_9}.ab" "${script_content_6}"
     __status=$?
-    dir_create__43_v0 "${amber_cache_path_5}/dest"
+    dir_create__43_v0 "${amber_cache_path_5}/dist"
     __status=$?
-    "${amber_cache_path_5}/bin/amber-${amber_version_7}/amber" build "${amber_cache_path_5}/tmp/${script_hash_9}.ab" "${dest_path_10}"
+    "${amber_cache_path_5}/bin/amber-${amber_version_7}/amber" build "${amber_cache_path_5}/tmp/${script_hash_9}.ab" "${dist_path_10}"
     __status=$?
     if [ "${__status}" != 0 ]; then
     code_11="${__status}"
@@ -132,7 +132,7 @@ else
     fi
 fi
 # Run the compiled script
-bash "${dest_path_10}"
+bash "${dist_path_10}"
 __status=$?
 if [ "${__status}" != 0 ]; then
 code_12="${__status}"

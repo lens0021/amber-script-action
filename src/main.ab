@@ -21,24 +21,24 @@ let script_hash = $ printf '%s\n' "{script_content}" | openssl sha256 | cut -d' 
   exit code
 }
 
-const dest_path = "{amber_cache_path}/dest/{script_hash}.sh"
+const dist_path = "{amber_cache_path}/dist/{script_hash}.sh"
 
 // Build the given script
-if file_exists(dest_path) {
+if file_exists(dist_path) {
   echo "::debug::A compiled bash script found. Skip building."
 } else {
   trust dir_create("{amber_cache_path}/tmp")
   trust file_write("{amber_cache_path}/tmp/{script_hash}.ab", script_content)
-  trust dir_create("{amber_cache_path}/dest")
+  trust dir_create("{amber_cache_path}/dist")
 
-  $ "{amber_cache_path}/bin/amber-{amber_version}/amber" build "{amber_cache_path}/tmp/{script_hash}.ab" "{dest_path}" $ failed(code) {
+  $ "{amber_cache_path}/bin/amber-{amber_version}/amber" build "{amber_cache_path}/tmp/{script_hash}.ab" "{dist_path}" $ failed(code) {
     echo "Failed to build script with exit code {code}"
     exit code
   }
 }
 
 // Run the compiled script
-$ bash "{dest_path}" $ failed(code) {
+$ bash "{dist_path}" $ failed(code) {
   echo "Failed to run script with exit code {code}"
   exit code
 }
