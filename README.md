@@ -11,21 +11,6 @@ Inspired by [actions/github-script].
 >
 > - Name of steps are not displayed. ([GitHub discussion](https://github.com/orgs/community/discussions/10985))
 
-## When to Use This Action
-
-This action is designed for **light-weight inline scripting** directly in your workflow files.
-
-If you need to **execute larger Amber programs from separate files**, use [lens0021/setup-amber] instead:
-
-```yaml
-- uses: lens0021/setup-amber@v2
-  with:
-    amber-version: 0.5.1-alpha
-- run: amber your-script.ab
-```
-
-This approach gives you proper syntax highlighting, LSP integration, and keeps your workflow files concise.
-
 ## Usage
 
 See [action.yaml](action.yaml)
@@ -72,6 +57,21 @@ jobs:
             echo msg
             echo "The length of the previous message is {len msg}."
 ```
+
+## When to Use This Action
+
+This action is designed for **light-weight inline scripting** directly in your workflow files.
+
+If you need to **execute larger Amber programs from separate files**, use [lens0021/setup-amber] instead:
+
+```yaml
+- uses: lens0021/setup-amber@v2
+  with:
+    amber-version: 0.5.1-alpha
+- run: amber your-script.ab
+```
+
+This approach gives you proper syntax highlighting, LSP integration, and keeps your workflow files concise.
 
 [amber]: https://amber-lang.com/
 [actions/github-script]: https://github.com/actions/github-script
