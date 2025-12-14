@@ -11,6 +11,21 @@ Inspired by [actions/github-script].
 >
 > - Name of steps are not displayed. ([GitHub discussion](https://github.com/orgs/community/discussions/10985))
 
+## When to Use This Action
+
+This action is designed for **light-weight inline scripting** directly in your workflow files.
+
+If you need to **execute larger Amber programs from separate files**, use [lens0021/setup-amber] instead:
+
+```yaml
+- uses: lens0021/setup-amber@v2
+  with:
+    amber-version: 0.5.1-alpha
+- run: amber your-script.ab
+```
+
+This approach gives you proper syntax highlighting, LSP integration, and keeps your workflow files concise.
+
 ## Usage
 
 See [action.yaml](action.yaml)
@@ -61,3 +76,4 @@ jobs:
 [amber]: https://amber-lang.com/
 [actions/github-script]: https://github.com/actions/github-script
 [composite action]: https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action
+[lens0021/setup-amber]: https://github.com/lens0021/setup-amber
