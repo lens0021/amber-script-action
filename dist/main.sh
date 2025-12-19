@@ -126,8 +126,3 @@ fi
 # Run the compiled script
 bash "${dist_path_8}"
 __status=$?
-if [ "${__status}" != 0 ]; then
-code_10="${__status}"
-    echo "Failed to run script with exit code ${code_10}"
-    exit "${code_10}"
-fi
