@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/lens0021/amber-script-action/compare/v2.0.4...v2.1.0) (2025-12-19)
+
+
+### Features
+
+* Improve caching strategy and use XDG-compliant paths ([#71](https://github.com/lens0021/amber-script-action/issues/71)) ([0a33b20](https://github.com/lens0021/amber-script-action/commit/0a33b204c46034582ccce529d12e4b6adc473db4))
+
+
+### Bug Fixes
+
+* Do not handle the failure of user-given script ([#73](https://github.com/lens0021/amber-script-action/issues/73)) ([f0ea6d6](https://github.com/lens0021/amber-script-action/commit/f0ea6d6ef370126b3257b3686954569b39a57c56))
+* Remove unused variable and update outdated documentation ([#75](https://github.com/lens0021/amber-script-action/issues/75)) ([269b719](https://github.com/lens0021/amber-script-action/commit/269b7199e5be41b692837604b87ad770cc704dcf))
+
 ## [2.0.4](https://github.com/lens0021/amber-script-action/compare/v2.0.3...v2.0.4) (2025-12-11)
 
 
