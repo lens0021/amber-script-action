@@ -46,7 +46,6 @@ runs:
         AMBER_SCRIPT_CACHE_PATH_INPUT: ${{ inputs.cache-path }}
         AMBER_SCRIPT_HASH: ${{ steps.script-hash.outputs.hash }}
         AMBER_SCRIPT_CONTENT: ${{ inputs.script }}
-        AMBER_SCRIPT_VERSION: ${{ inputs.amber-version }}
       run: |
         # Build and run script
         bash "${{ github.action_path }}/dist/main.sh"
