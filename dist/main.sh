@@ -83,59 +83,51 @@ env_var_get__99_v0() {
     return 0
 }
 
-# Calculate cache path
+# Load environment variables
 env_var_get__99_v0 "AMBER_SCRIPT_CACHE_PATH_INPUT"
 __status=$?
 cache_path_input_3="${ret_env_var_get99_v0}"
-env_var_get__99_v0 "AMBER_SCRIPT_RUNNER_OS"
-__status=$?
-runner_os_4="${ret_env_var_get99_v0}"
-trim__11_v0 "${cache_path_input_3}"
-ret_trim11_v0__8_26="${ret_trim11_v0}"
-amber_cache_path_5="$(if [ "$([ "_${ret_trim11_v0__8_26}" == "_" ]; echo $?)" != 0 ]; then echo "${cache_path_input_3}"; else echo "$(if [ "$([ "_${runner_os_4}" != "_Linux" ]; echo $?)" != 0 ]; then echo "/home/runner/.amber-script-action"; else echo "/Users/runner/.amber-script-action"; fi)"; fi)"
 env_var_get__99_v0 "AMBER_SCRIPT_CONTENT"
 __status=$?
-script_content_6="${ret_env_var_get99_v0}"
+script_content_4="${ret_env_var_get99_v0}"
+env_var_get__99_v0 "AMBER_SCRIPT_HASH"
+__status=$?
+script_hash_5="${ret_env_var_get99_v0}"
 env_var_get__99_v0 "AMBER_SCRIPT_VERSION"
 __status=$?
-amber_version_7="${ret_env_var_get99_v0}"
-# Calculate hash for the given script
-# Note: macos runner does not have sha256sum.
-command_4="$(printf '%s
-' "${script_content_6}" | openssl sha256 | cut -d' ' -f 2)"
+# Calculate cache path
+trim__11_v0 "${cache_path_input_3}"
+ret_trim11_v0__12_26="${ret_trim11_v0}"
+env_var_get__99_v0 "HOME"
 __status=$?
-if [ "${__status}" != 0 ]; then
-code_8="${__status}"
-    echo "Failed to calculate script hash"
-    exit "${code_8}"
-fi
-script_hash_9="${command_4}"
-dist_path_10="${amber_cache_path_5}/dist/${script_hash_9}.sh"
+ret_env_var_get99_v0__13_16="${ret_env_var_get99_v0}"
+amber_cache_path_7="$(if [ "$([ "_${ret_trim11_v0__12_26}" != "_" ]; echo $?)" != 0 ]; then echo "${ret_env_var_get99_v0__13_16}/.cache/amber-script-action"; else echo "${cache_path_input_3}"; fi)"
+dist_path_8="${amber_cache_path_7}/dist/${script_hash_5}.sh"
 # Build the given script
-file_exists__38_v0 "${dist_path_10}"
-ret_file_exists38_v0__27_4="${ret_file_exists38_v0}"
-if [ "${ret_file_exists38_v0__27_4}" != 0 ]; then
+file_exists__38_v0 "${dist_path_8}"
+ret_file_exists38_v0__19_4="${ret_file_exists38_v0}"
+if [ "${ret_file_exists38_v0__19_4}" != 0 ]; then
     echo "::debug::A compiled bash script found. Skip building."
 else
-    dir_create__43_v0 "${amber_cache_path_5}/tmp"
+    dir_create__43_v0 "${amber_cache_path_7}/tmp"
     __status=$?
-    file_write__40_v0 "${amber_cache_path_5}/tmp/${script_hash_9}.ab" "${script_content_6}"
+    file_write__40_v0 "${amber_cache_path_7}/tmp/${script_hash_5}.ab" "${script_content_4}"
     __status=$?
-    dir_create__43_v0 "${amber_cache_path_5}/dist"
+    dir_create__43_v0 "${amber_cache_path_7}/dist"
     __status=$?
-    "${amber_cache_path_5}/bin/amber-${amber_version_7}/amber" build "${amber_cache_path_5}/tmp/${script_hash_9}.ab" "${dist_path_10}"
+    "${amber_cache_path_7}/bin/amber" build "${amber_cache_path_7}/tmp/${script_hash_5}.ab" "${dist_path_8}"
     __status=$?
     if [ "${__status}" != 0 ]; then
-    code_11="${__status}"
-        echo "Failed to build script with exit code ${code_11}"
-        exit "${code_11}"
+    code_9="${__status}"
+        echo "Failed to build script with exit code ${code_9}"
+        exit "${code_9}"
     fi
 fi
 # Run the compiled script
-bash "${dist_path_10}"
+bash "${dist_path_8}"
 __status=$?
 if [ "${__status}" != 0 ]; then
-code_12="${__status}"
-    echo "Failed to run script with exit code ${code_12}"
-    exit "${code_12}"
+code_10="${__status}"
+    echo "Failed to run script with exit code ${code_10}"
+    exit "${code_10}"
 fi

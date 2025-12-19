@@ -20,22 +20,31 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Calculate input script hash
+      id: script-hash
+      env:
+        AMBER_SCRIPT_CONTENT: ${{ inputs.script }}
+      shell: bash
+      run: |
+        hash=$(printf '%s' "$AMBER_SCRIPT_CONTENT" | openssl sha256 | cut -d' ' -f2)
+        echo "hash=${hash}" >> $GITHUB_OUTPUT
+        echo "cache-base=${HOME}/.cache/amber-script-action" >> $GITHUB_OUTPUT
     - name: Cache compiled script
       uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       if: inputs.enable-cache
       with:
-        path: ${{ inputs.cache-path != '' && format('{0}/dist', inputs.cache-path) || (runner.os == 'Linux' && '/home/runner/.amber-script-action/dist' || '/Users/runner/.amber-script-action/dist') }}
-        key: amber-script-action-${{ runner.os }}-script-${{ inputs.amber-version }}
+        path: ${{ inputs.cache-path != '' && format('{0}/dist/{1}.sh', inputs.cache-path, steps.script-hash.outputs.hash) || format('{0}/dist/{1}.sh', steps.script-hash.outputs.cache-base, steps.script-hash.outputs.hash) }}
+        key: amber-${{ inputs.amber-version }}-${{ steps.script-hash.outputs.hash }}
     - uses: lens0021/setup-amber@014375f0b64132ead405709f11653f95c6aa1652 # v2.0.0
       with:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
-        cache-path: ${{ inputs.cache-path != '' && format('{0}/actions/setup-amber', inputs.cache-path) || (runner.os == 'Linux' && '/home/runner/.amber-script-action/actions/setup-amber' || '/Users/runner/.amber-script-action/actions/setup-amber') }}
-        bin-path: ${{ inputs.cache-path != '' && format('{0}/bin/amber-{1}', inputs.cache-path, inputs.amber-version) || (runner.os == 'Linux' && format('/home/runner/.amber-script-action/bin/amber-{0}', inputs.amber-version) || format('/Users/runner/.amber-script-action/bin/amber-{0}', inputs.amber-version)) }}
+        cache-path: ${{ inputs.cache-path != '' && format('{0}/actions/setup-amber', inputs.cache-path) || format('{0}/actions/setup-amber', steps.script-hash.outputs.cache-base) }}
+        bin-path: ${{ inputs.cache-path != '' && format('{0}/bin', inputs.cache-path) || format('{0}/bin', steps.script-hash.outputs.cache-base) }}
     - shell: bash
       env:
         AMBER_SCRIPT_CACHE_PATH_INPUT: ${{ inputs.cache-path }}
-        AMBER_SCRIPT_RUNNER_OS: ${{ runner.os }}
+        AMBER_SCRIPT_HASH: ${{ steps.script-hash.outputs.hash }}
         AMBER_SCRIPT_CONTENT: ${{ inputs.script }}
         AMBER_SCRIPT_VERSION: ${{ inputs.amber-version }}
       run: |
