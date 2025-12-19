@@ -1,15 +1,11 @@
 ---
 name: Check dist
-
 on:
   pull_request:
   push:
     branches:
       - main
-
-permissions:
-  contents: read
-
+permissions: {}
 jobs:
   check-dist:
     runs-on: ubuntu-latest

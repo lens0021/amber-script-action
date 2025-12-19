@@ -1,13 +1,10 @@
 name: GitHub Actions Security Analysis with zizmor 🌈
-
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["**"]
-
 permissions: {}
-
 jobs:
   zizmor:
     runs-on: ubuntu-latest
