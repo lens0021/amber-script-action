@@ -2,9 +2,7 @@
 name: Test
 on:
   - push
-permissions:
-  contents: read
-
+permissions: {}
 jobs:
   test-basic:
     name: Test basic script execution
@@ -16,6 +14,7 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@b25f731bf2f9eb9748c2e9757d366c3e72fa2109 # v1.0.2-beta8
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
