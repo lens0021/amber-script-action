@@ -39,7 +39,7 @@ runs:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
         cache-path: ${{ inputs.cache-path != '' && format('{0}/actions/setup-amber', inputs.cache-path) || '~/.cache/amber-script-action/actions/setup-amber' }}
-        bin-path: ${{ inputs.cache-path != '' && format('{0}/bin/amber', inputs.cache-path) || '~/.cache/amber-script-action/bin/amber' }}
+        bin-path: ${{ inputs.cache-path != '' && format('{0}/bin', inputs.cache-path) || '~/.cache/amber-script-action/bin' }}
     - shell: bash
       env:
         AMBER_SCRIPT_CACHE_PATH_INPUT: ${{ inputs.cache-path }}
