@@ -22,9 +22,11 @@ runs:
   steps:
     - name: Calculate input script hash
       id: script-hash
+      env:
+        AMBER_SCRIPT_CONTENT: ${{ inputs.script }}
       shell: bash
       run: |
-        hash=$(printf '%s' '${{ inputs.script }}' | openssl sha256 | cut -d' ' -f2)
+        hash=$(printf '%s' "$AMBER_SCRIPT_CONTENT" | openssl sha256 | cut -d' ' -f2)
         echo "hash=${hash}" >> $GITHUB_OUTPUT
     - name: Cache compiled script
       uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
@@ -37,7 +39,7 @@ runs:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
         cache-path: ${{ inputs.cache-path != '' && format('{0}/actions/setup-amber', inputs.cache-path) || '~/.cache/amber-script-action/actions/setup-amber' }}
-        bin-path: ${{ inputs.cache-path != '' && format('{0}/bin/amber-{1}', inputs.cache-path, inputs.amber-version) || format('~/.cache/amber-script-action/bin/amber-{0}', inputs.amber-version) }}
+        bin-path: ${{ inputs.cache-path != '' && format('{0}/bin/amber', inputs.cache-path) || '~/.cache/amber-script-action/bin/amber' }}
     - shell: bash
       env:
         AMBER_SCRIPT_CACHE_PATH_INPUT: ${{ inputs.cache-path }}
