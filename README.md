@@ -33,9 +33,8 @@ See [action.yaml](action.yaml)
     enable-cache: ""
 
     # The path to store Amber binaries and the compiled bash scripts.
-    # If empty string is given, the used path depends on the runner.
-    # Default (Linux): '/home/runner/.amber-script-action'
-    # Default (Mac): '/Users/runner/.amber-script-action'
+    # If empty string is given, the default path will be used.
+    # Default: '~/.cache/amber-script-action'
     cache-path: ""
 ```
 

@@ -87,12 +87,12 @@ env_var_get__99_v0() {
 env_var_get__99_v0 "AMBER_SCRIPT_CACHE_PATH_INPUT"
 __status=$?
 cache_path_input_3="${ret_env_var_get99_v0}"
-env_var_get__99_v0 "AMBER_SCRIPT_RUNNER_OS"
+env_var_get__99_v0 "HOME"
 __status=$?
-runner_os_4="${ret_env_var_get99_v0}"
+home_4="${ret_env_var_get99_v0}"
 trim__11_v0 "${cache_path_input_3}"
 ret_trim11_v0__8_26="${ret_trim11_v0}"
-amber_cache_path_5="$(if [ "$([ "_${ret_trim11_v0__8_26}" == "_" ]; echo $?)" != 0 ]; then echo "${cache_path_input_3}"; else echo "$(if [ "$([ "_${runner_os_4}" != "_Linux" ]; echo $?)" != 0 ]; then echo "/home/runner/.amber-script-action"; else echo "/Users/runner/.amber-script-action"; fi)"; fi)"
+amber_cache_path_5="$(if [ "$([ "_${ret_trim11_v0__8_26}" == "_" ]; echo $?)" != 0 ]; then echo "${cache_path_input_3}"; else echo "${home_4}/.cache/amber-script-action"; fi)"
 env_var_get__99_v0 "AMBER_SCRIPT_CONTENT"
 __status=$?
 script_content_6="${ret_env_var_get99_v0}"
@@ -113,8 +113,8 @@ script_hash_9="${command_4}"
 dist_path_10="${amber_cache_path_5}/dist/${script_hash_9}.sh"
 # Build the given script
 file_exists__38_v0 "${dist_path_10}"
-ret_file_exists38_v0__27_4="${ret_file_exists38_v0}"
-if [ "${ret_file_exists38_v0__27_4}" != 0 ]; then
+ret_file_exists38_v0__25_4="${ret_file_exists38_v0}"
+if [ "${ret_file_exists38_v0__25_4}" != 0 ]; then
     echo "::debug::A compiled bash script found. Skip building."
 else
     dir_create__43_v0 "${amber_cache_path_5}/tmp"

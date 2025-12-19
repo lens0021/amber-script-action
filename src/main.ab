@@ -4,12 +4,10 @@ import { dir_create, file_exists, file_write } from "std/fs"
 
 // Calculate cache path
 const cache_path_input = trust env_var_get("AMBER_SCRIPT_CACHE_PATH_INPUT")
-const runner_os = trust env_var_get("AMBER_SCRIPT_RUNNER_OS")
+const home = trust env_var_get("HOME")
 const amber_cache_path = trim(cache_path_input) != ""
   then cache_path_input
-  else runner_os == "Linux"
-    then "/home/runner/.amber-script-action"
-    else "/Users/runner/.amber-script-action"
+  else "{home}/.cache/amber-script-action"
 
 const script_content = trust env_var_get("AMBER_SCRIPT_CONTENT")
 const amber_version = trust env_var_get("AMBER_SCRIPT_VERSION")
