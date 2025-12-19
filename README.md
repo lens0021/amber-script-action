@@ -24,8 +24,8 @@ See [action.yaml](action.yaml)
     script: ""
 
     # The version to use.
-    # Examples: 0.4.0-alpha, 0.3.5-alpha
-    # Default: 0.4.0-alpha
+    # Examples: 0.5.1-alpha, 0.4.0-alpha
+    # Default: 0.5.1-alpha
     amber-version: ""
 
     # Whether to cache Amber binaries and the compiled bash scripts

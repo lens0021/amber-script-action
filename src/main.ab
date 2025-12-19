@@ -6,7 +6,6 @@ import { dir_create, file_exists, file_write } from "std/fs"
 const cache_path_input = trust env_var_get("AMBER_SCRIPT_CACHE_PATH_INPUT")
 const script_content = trust env_var_get("AMBER_SCRIPT_CONTENT")
 const script_hash = trust env_var_get("AMBER_SCRIPT_HASH")
-const amber_version = trust env_var_get("AMBER_SCRIPT_VERSION")
 
 // Calculate cache path
 const amber_cache_path = trim(cache_path_input) == ""
