@@ -20,12 +20,12 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Calculate input script hash
-      id: script-hash
+    - id: script-hash
       env:
         AMBER_SCRIPT_CONTENT: ${{ inputs.script }}
       shell: bash
       run: |
+        # Calculate input script hash
         hash=$(printf '%s' "$AMBER_SCRIPT_CONTENT" | openssl sha256 | cut -d' ' -f2)
         echo "hash=${hash}" >> $GITHUB_OUTPUT
         echo "cache-base=${HOME}/.cache/amber-script-action" >> $GITHUB_OUTPUT
