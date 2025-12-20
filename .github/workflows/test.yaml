@@ -25,3 +25,21 @@ jobs:
             const msg = "Hello World!"
             echo msg
             echo "The length of the previous message is {len msg}"
+
+  test-custom-cache-path:
+    name: Test with custom cache path
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@b25f731bf2f9eb9748c2e9757d366c3e72fa2109 # v1.0.2-beta8
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+      - name: Test with custom cache path
+        uses: ./
+        with:
+          amber-version: 0.5.1-alpha
+          cache-path: /tmp/amber-test-cache
+          script: |
+            const msg = "Hello World!"
+            echo msg
+            echo "The length of the previous message is {len msg}"
