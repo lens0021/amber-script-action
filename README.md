@@ -88,7 +88,7 @@ This approach gives you proper syntax highlighting, LSP integration, and keeps y
 **With `amber-script-action` (does NOT use `set -e`):**
 ```yaml
 - name: This will NOT fail the workflow
-  uses: lens0021/amber-script-action@v1
+  uses: lens0021/amber-script-action@v2
   with:
     script: |
       trust $ ls /nonexistent $ // This command fails, but execution continues
@@ -97,13 +97,13 @@ This approach gives you proper syntax highlighting, LSP integration, and keeps y
 
 **To explicitly fail on errors, use the `exit` builtin:**
 ```yaml
-- uses: lens0021/amber-script-action@v1
+- uses: lens0021/amber-script-action@v2
   with:
     script: |
-  $ ls /nonexistent $ failed(code) {
-    echo "Command failed with exit code {code}"
-    exit code // Explicitly exit to fail the workflow
-  }
+      $ ls /nonexistent $ failed(code) {
+        echo "Command failed with exit code {code}"
+        exit code // Explicitly exit to fail the workflow
+      }
 ```
 
 [amber]: https://amber-lang.com/
