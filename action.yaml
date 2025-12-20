@@ -52,4 +52,4 @@ runs:
         AMBER_SCRIPT_HASH: ${{ steps.script-hash.outputs.hash }}
       run: |
         # Build and run script
-        bash -e "${{ github.action_path }}/dist/main.sh"
+        bash "${{ github.action_path }}/dist/main.sh"
