@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/lens0021/amber-script-action/compare/v2.1.0...v2.1.1) (2025-12-20)
+
+
+### Bug Fixes
+
+* **cache-path:** Fix the bug the action fails when cache-path input used ([#77](https://github.com/lens0021/amber-script-action/issues/77)) ([c53f7e6](https://github.com/lens0021/amber-script-action/commit/c53f7e67b9aa67ede1ae2ddd710682e3525986c2))
+
 ## [2.1.0](https://github.com/lens0021/amber-script-action/compare/v2.0.4...v2.1.0) (2025-12-19)
 
 
