@@ -162,8 +162,8 @@ if [ "${__status}" != 0 ]; then
     exit "${__status}"
 fi
 # Process outputs into JSON and write to GITHUB_OUTPUT
-command_5="$(jq -R -s 'split("
-") | map(select(length > 0)) | map(split("=")) | map({(.[0]): .[1]}) | add // {}' "{}" "${outputs_path_9}")"
+command_5="$(jq -R -s -c 'split("
+") | map(select(length > 0)) | map(split("=")) | map({(.[0]): .[1]}) | add // {}' "${outputs_path_9}")"
 __status=$?
 if [ "${__status}" != 0 ]; then
     echo "::warning::Failed to process outputs, using empty object"

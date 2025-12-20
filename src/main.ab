@@ -41,7 +41,7 @@ main {
   $ bash "{dist_path}" $?
 
   // Process outputs into JSON and write to GITHUB_OUTPUT
-  const json_output = $ jq -R -s 'split("\n") | map(select(length > 0)) | map(split("=")) | map(\{(.[0]): .[1]}) | add // \{}' "\{}" "{outputs_path}" $ failed {
+  const json_output = $ jq -R -s -c 'split("\n") | map(select(length > 0)) | map(split("=")) | map(\{(.[0]): .[1]}) | add // \{}' "{outputs_path}" $ failed {
     echo "::warning::Failed to process outputs, using empty object"
     echo "\{\}"
   }
