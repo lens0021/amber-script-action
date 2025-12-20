@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/lens0021/amber-script-action/compare/v2.1.1...v2.1.2) (2025-12-20)
+
+
+### Bug Fixes
+
+* Propagate script exit code correctly ([#81](https://github.com/lens0021/amber-script-action/issues/81)) ([bedaba2](https://github.com/lens0021/amber-script-action/commit/bedaba2bdd59a0474423d00d474c0d905d359855))
+
 ## [2.1.1](https://github.com/lens0021/amber-script-action/compare/v2.1.0...v2.1.1) (2025-12-20)
 
 
