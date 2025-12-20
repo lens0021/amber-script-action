@@ -40,3 +40,55 @@ jobs:
             const msg = "Hello World!"
             echo msg
             echo "The length of the previous message is {len msg}"
+
+  test-outputs-single:
+    name: Test single output
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+      - uses: ./
+        id: test
+        with:
+          amber-version: 0.5.1-alpha
+          script: $ echo "result=success" >> \$AMBER_SCRIPT_OUTPUT $?
+      - name: Verify output
+        env:
+          OUTPUTS: ${{ steps.test.outputs.script_outputs }}
+        run: |
+          echo "Outputs JSON: $OUTPUTS"
+          result=$(echo "$OUTPUTS" | jq -r '.result')
+          if [ "$result" != "success" ]; then
+            echo "Expected 'success', got '$result'"
+            exit 1
+          fi
+          echo "Output test passed!"
+
+  test-outputs-multiple:
+    name: Test multiple outputs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+      - uses: ./
+        id: test
+        with:
+          amber-version: 0.5.1-alpha
+          script: |
+            $ echo "key1=value1" >> \$AMBER_SCRIPT_OUTPUT $?
+            $ echo "key2=value2" >> \$AMBER_SCRIPT_OUTPUT $?
+            $ echo "number=42" >> \$AMBER_SCRIPT_OUTPUT $?
+      - name: Verify outputs
+        run: |
+          key1="${{ fromJSON(steps.test.outputs.script_outputs).key1 }}"
+          key2="${{ fromJSON(steps.test.outputs.script_outputs).key2 }}"
+          number="${{ fromJSON(steps.test.outputs.script_outputs).number }}"
+          echo "key1=$key1"
+          echo "key2=$key2"
+          echo "number=$number"
+          [ "$key1" = "value1" ] || exit 1
+          [ "$key2" = "value2" ] || exit 1
+          [ "$number" = "42" ] || exit 1
+          echo "All outputs verified successfully!"
