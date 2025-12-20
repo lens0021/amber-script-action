@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.4](https://github.com/lens0021/amber-script-action/compare/v2.1.3...v2.1.4) (2025-12-20)
+
+
+### Bug Fixes
+
+* Raise errors from the user script if any ([#88](https://github.com/lens0021/amber-script-action/issues/88)) ([ccc3b73](https://github.com/lens0021/amber-script-action/commit/ccc3b733955490ae2a5fbf059af109901b4191f5))
+
 ## [2.1.3](https://github.com/lens0021/amber-script-action/compare/v2.1.2...v2.1.3) (2025-12-20)
 
 
