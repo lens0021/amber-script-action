@@ -72,6 +72,40 @@ If you need to **execute larger Amber programs from separate files**, use [lens0
 
 This approach gives you proper syntax highlighting, LSP integration, and keeps your workflow files concise.
 
+## Error Handling
+
+> [!IMPORTANT]
+> Unlike regular `run:` steps, this action does **not** use `set -e` due to the nature of Amber's compiled output, which means that **commands will not automatically fail the workflow** when they return non-zero exit codes.
+
+**With regular `run:` (uses `set -e` by default):**
+```yaml
+- name: This will fail the workflow
+  run: |
+    false  # This command fails, workflow stops here
+    echo "This will not be executed"
+```
+
+**With `amber-script-action` (does NOT use `set -e`):**
+```yaml
+- name: This will NOT fail the workflow
+  uses: lens0021/amber-script-action@v1
+  with:
+    script: |
+      trust $ ls /nonexistent $ // This command fails, but execution continues
+      echo "This WILL be executed"
+```
+
+**To explicitly fail on errors, use the `exit` builtin:**
+```yaml
+- uses: lens0021/amber-script-action@v1
+  with:
+    script: |
+  $ ls /nonexistent $ failed(code) {
+    echo "Command failed with exit code {code}"
+    exit code // Explicitly exit to fail the workflow
+  }
+```
+
 [amber]: https://amber-lang.com/
 [actions/github-script]: https://github.com/actions/github-script
 [composite action]: https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action

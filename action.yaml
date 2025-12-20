@@ -5,7 +5,9 @@ branding:
   icon: code
 inputs:
   script:
-    description: The script to run
+    description: >-
+      The script to run.
+      Note: This action does not use 'set -e'. See README for error handling details.
     required: true
   amber-version:
     default: 0.5.1-alpha
