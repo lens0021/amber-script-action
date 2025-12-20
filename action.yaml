@@ -30,6 +30,7 @@ runs:
         echo "hash=${hash}" >> $GITHUB_OUTPUT
         echo "cache-base=${HOME}/.cache/amber-script-action" >> $GITHUB_OUTPUT
     - name: Cache compiled script
+      id: cache-compiled
       uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       if: inputs.enable-cache
       with:
@@ -37,6 +38,7 @@ runs:
         key: amber-${{ inputs.amber-version }}-${{ steps.script-hash.outputs.hash }}
     - uses: lens0021/setup-amber@58394844f9bb51e8b559f224b03f6dcb3d79f644 # v2.2.0
       id: setup-amber
+      if: ${{ !inputs.enable-cache || steps.cache-compiled.outputs.cache-hit != 'true' }}
       with:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
