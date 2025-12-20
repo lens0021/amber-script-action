@@ -36,6 +36,7 @@ runs:
         path: ${{ inputs.cache-path != '' && format('{0}/dist/{1}.sh', inputs.cache-path, steps.script-hash.outputs.hash) || format('{0}/dist/{1}.sh', steps.script-hash.outputs.cache-base, steps.script-hash.outputs.hash) }}
         key: amber-${{ inputs.amber-version }}-${{ steps.script-hash.outputs.hash }}
     - uses: lens0021/setup-amber@58394844f9bb51e8b559f224b03f6dcb3d79f644 # v2.2.0
+      id: setup-amber
       with:
         amber-version: ${{ inputs.amber-version }}
         enable-cache: ${{ inputs.enable-cache }}
@@ -43,9 +44,10 @@ runs:
         bin-path: ${{ inputs.cache-path != '' && format('{0}/bin', inputs.cache-path) || format('{0}/bin', steps.script-hash.outputs.cache-base) }}
     - shell: bash
       env:
+        AMBER_SCRIPT_AMBER_PATH: ${{ steps.setup-amber.outputs.amber-path }}
         AMBER_SCRIPT_CACHE_PATH_INPUT: ${{ inputs.cache-path }}
-        AMBER_SCRIPT_HASH: ${{ steps.script-hash.outputs.hash }}
         AMBER_SCRIPT_CONTENT: ${{ inputs.script }}
+        AMBER_SCRIPT_HASH: ${{ steps.script-hash.outputs.hash }}
       run: |
         # Build and run script
         bash "${{ github.action_path }}/dist/main.sh"
