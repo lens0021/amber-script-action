@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.3](https://github.com/lens0021/amber-script-action/compare/v2.1.2...v2.1.3) (2025-12-20)
+
+
+### Bug Fixes
+
+* **cache:** Use more detailed cache key to prevent conflict ([#83](https://github.com/lens0021/amber-script-action/issues/83)) ([99f3a18](https://github.com/lens0021/amber-script-action/commit/99f3a18fb86948ea07a79752a706a308a416640b))
+* skip setup-amber on cache hit ([#84](https://github.com/lens0021/amber-script-action/issues/84)) ([1d684c9](https://github.com/lens0021/amber-script-action/commit/1d684c996ea164ca498cd31e4f6d3333764a5d9b))
+
+
+### Reverts
+
+* "fix: Propagate script exit code correctly ([#81](https://github.com/lens0021/amber-script-action/issues/81))" ([#86](https://github.com/lens0021/amber-script-action/issues/86)) ([518b6d3](https://github.com/lens0021/amber-script-action/commit/518b6d3f58acdfc5e51b32815e19f7aca68c5fd6))
+
 ## [2.1.2](https://github.com/lens0021/amber-script-action/compare/v2.1.1...v2.1.2) (2025-12-20)
 
 
