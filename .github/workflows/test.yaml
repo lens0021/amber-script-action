@@ -52,7 +52,7 @@ jobs:
         id: test
         with:
           amber-version: 0.5.1-alpha
-          script: $ echo "result=success" >> \$AMBER_SCRIPT_OUTPUT $?
+          script: trust $ echo "result=success" >> \$AMBER_SCRIPT_OUTPUT $
       - name: Verify output
         env:
           OUTPUTS: ${{ steps.test.outputs.script_outputs }}
@@ -77,9 +77,9 @@ jobs:
         with:
           amber-version: 0.5.1-alpha
           script: |
-            $ echo "key1=value1" >> \$AMBER_SCRIPT_OUTPUT $?
-            $ echo "key2=value2" >> \$AMBER_SCRIPT_OUTPUT $?
-            $ echo "number=42" >> \$AMBER_SCRIPT_OUTPUT $?
+            trust $ echo "key1=value1" >> \$AMBER_SCRIPT_OUTPUT $
+            trust $ echo "key2=value2" >> \$AMBER_SCRIPT_OUTPUT $
+            trust $ echo "number=42" >> \$AMBER_SCRIPT_OUTPUT $
       - name: Verify outputs
         run: |
           key1="${{ fromJSON(steps.test.outputs.script_outputs).key1 }}"
