@@ -106,6 +106,34 @@ This approach gives you proper syntax highlighting, LSP integration, and keeps y
       }
 ```
 
+## Working with Outputs
+
+The action supports setting outputs that can be used in subsequent workflow steps. Due to the nature of composite actions, outputs must be statically defined in the action metadata and cannot be dynamically created at runtime. To work around this constraint while providing maximum flexibility, all script outputs are collected into a single JSON object (`script_outputs`). This allows scripts to set any number of outputs with arbitrary names, which can then be extracted using `fromJSON()` in subsequent steps.
+
+Write outputs to the `$AMBER_SCRIPT_OUTPUT` file using the same `key=value` format as `$GITHUB_OUTPUT`:
+
+```yaml
+- id: my-script
+  uses: lens0021/amber-script-action@v2
+  with:
+    script: |
+      const docs_path = "./docs"
+      const version = "1.2.3"
+
+      // Set outputs
+      trust $ echo "docs_path={docs_path}" >> \$AMBER_SCRIPT_OUTPUT $
+      trust $ echo "version={version}" >> \$AMBER_SCRIPT_OUTPUT $
+
+      echo "Outputs set successfully"
+
+- name: Use outputs
+  run: |
+    echo "Docs path: ${{ fromJSON(steps.my-script.outputs.script_outputs).docs_path }}"
+    echo "Version: ${{ fromJSON(steps.my-script.outputs.script_outputs).version }}"
+```
+
+All outputs are returned as a single JSON object in the `script_outputs` output. To access individual values:
+
 [amber]: https://amber-lang.com/
 [actions/github-script]: https://github.com/actions/github-script
 [composite action]: https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action

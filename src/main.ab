@@ -1,4 +1,4 @@
-import { trim } from "std/text"
+import { split, trim } from "std/text"
 import { env_var_get } from "std/env"
 import { dir_create, file_exists, file_write } from "std/fs"
 
@@ -15,14 +15,15 @@ main {
     else cache_path_input
 
   const dist_path = "{amber_cache_path}/dist/{script_hash}.sh"
+  const outputs_path = "{amber_cache_path}/outputs/{script_hash}.txt"
 
   // Build the given script
   if file_exists(dist_path) {
     echo "::debug::A compiled bash script found. Skip building."
   } else {
-    trust dir_create("{amber_cache_path}/tmp")
-    trust file_write("{amber_cache_path}/tmp/{script_hash}.ab", script_content)
-    trust dir_create("{amber_cache_path}/dist")
+    dir_create("{amber_cache_path}/tmp")?
+    file_write("{amber_cache_path}/tmp/{script_hash}.ab", script_content)?
+    dir_create("{amber_cache_path}/dist")?
 
     $ "{amber_path}" build "{amber_cache_path}/tmp/{script_hash}.ab" "{dist_path}" $ failed(code) {
       echo "Failed to build script with exit code {code}"
@@ -30,6 +31,21 @@ main {
     }
   }
 
+  // Prepare outputs collection
+  dir_create("{amber_cache_path}/outputs")?
+  $ touch {outputs_path} $?
+  $ AMBER_SCRIPT_OUTPUT="{outputs_path}" $?
+  $ export AMBER_SCRIPT_OUTPUT $?
+
   // Run the compiled script
   $ bash "{dist_path}" $?
+
+  // Process outputs into JSON and write to GITHUB_OUTPUT
+  const json_output = $ jq -R -s -c 'split("\n") | map(select(length > 0)) | map(split("=")) | map(\{(.[0]): .[1]}) | add // \{}' "{outputs_path}" $ failed {
+    echo "::warning::Failed to process outputs, using empty object"
+    echo "\{\}"
+  }
+  $ echo "script_outputs={json_output}" >> \$GITHUB_OUTPUT $ failed(code) {
+    echo "::warning::Failed to set script_outputs with code {code}"
+  }
 }
