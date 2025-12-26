@@ -78,6 +78,7 @@ This approach gives you proper syntax highlighting, LSP integration, and keeps y
 > Unlike regular `run:` steps, this action does **not** use `set -e` due to the nature of Amber's compiled output, which means that **commands will not automatically fail the workflow** when they return non-zero exit codes.
 
 **With regular `run:` (uses `set -e` by default):**
+
 ```yaml
 - name: This will fail the workflow
   run: |
@@ -86,6 +87,7 @@ This approach gives you proper syntax highlighting, LSP integration, and keeps y
 ```
 
 **With `amber-script-action` (does NOT use `set -e`):**
+
 ```yaml
 - name: This will NOT fail the workflow
   uses: lens0021/amber-script-action@v2
@@ -96,6 +98,7 @@ This approach gives you proper syntax highlighting, LSP integration, and keeps y
 ```
 
 **To explicitly fail on errors, use the `exit` builtin:**
+
 ```yaml
 - uses: lens0021/amber-script-action@v2
   with:
