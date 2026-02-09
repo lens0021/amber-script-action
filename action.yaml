@@ -37,7 +37,7 @@ runs:
         echo "cache-base=${HOME}/.cache/amber-script-action" >> $GITHUB_OUTPUT
     - name: Cache compiled script
       id: cache-compiled
-      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
       if: inputs.enable-cache
       with:
         path: ${{ inputs.cache-path != '' && format('{0}/dist/{1}.sh', inputs.cache-path, steps.script-hash.outputs.hash) || format('{0}/dist/{1}.sh', steps.script-hash.outputs.cache-base, steps.script-hash.outputs.hash) }}
