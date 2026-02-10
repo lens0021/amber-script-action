@@ -17,6 +17,8 @@ See [action.yaml](action.yaml)
 
 <!-- start usage -->
 
+### Basic Parameters
+
 ```yaml
 - uses: lens0021/amber-script-action@v1
   with:
@@ -36,6 +38,29 @@ See [action.yaml](action.yaml)
     # If empty string is given, the default path will be used.
     # Default: '~/.cache/amber-script-action'
     cache-path: ""
+```
+
+### Building from Source (Optional)
+
+> [!NOTE]
+> Building from source requires Rust and Cargo to be available in the environment.
+> GitHub Actions runners include these by default, but if you're using a custom
+> runner, you may need to install the Rust toolchain first.
+
+When you need to build Amber from source instead of using pre-built binaries:
+
+```yaml
+- uses: lens0021/amber-script-action@v1
+  with:
+    # Git repository URL to clone Amber from when building from source.
+    # Default: https://github.com/amber-lang/amber.git
+    amber-repository-url: ""
+
+    # Git ref (commit SHA, branch, or tag) to build Amber from source.
+    # If provided, this overrides 'amber-version' and builds from source.
+    # Examples: main, v0.5.0-alpha, 3742194594cfdf18e034658d1f58a93b3143bbd7
+    # Default: "" (uses pre-built binaries)
+    amber-repository-ref: ""
 ```
 
 <!-- end usage -->

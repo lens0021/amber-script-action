@@ -92,3 +92,16 @@ jobs:
           [ "$key2" = "value2" ] || exit 1
           [ "$number" = "42" ] || exit 1
           echo "All outputs verified successfully!"
+
+  test-build-from-source:
+    name: Test build from specific commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: ./
+        with:
+          amber-repository-ref: 75a57027775f56b4044439346f2cd33df80645f9
+          script: |
+            echo(trust ls("."))
