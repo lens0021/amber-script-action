@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/lens0021/amber-script-action/compare/v2.2.0...v2.3.0) (2026-02-10)
+
+
+### Features
+
+* Add support for building Amber from custom sources ([#101](https://github.com/lens0021/amber-script-action/issues/101)) ([7583feb](https://github.com/lens0021/amber-script-action/commit/7583febd0caad73bea844d9bf3fc771443217229))
+
 ## [2.2.0](https://github.com/lens0021/amber-script-action/compare/v2.1.4...v2.2.0) (2025-12-20)
 
 
