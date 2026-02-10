@@ -42,6 +42,11 @@ See [action.yaml](action.yaml)
 
 ### Building from Source (Optional)
 
+> [!NOTE]
+> Building from source requires Rust and Cargo to be available in the environment.
+> GitHub Actions runners include these by default, but if you're using a custom
+> runner, you may need to install the Rust toolchain first.
+
 When you need to build Amber from source instead of using pre-built binaries:
 
 ```yaml
