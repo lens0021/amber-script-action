@@ -19,6 +19,16 @@ inputs:
       The path to store Amber binaries and the compiled bash scripts.
       If empty string is given, the used path depends on the runner.
     default: ""
+  amber-repository-url:
+    description: >-
+      The Git repository URL to clone Amber from when building from source.
+      Defaults to the official Amber repository.
+    default: https://github.com/amber-lang/amber.git
+  amber-repository-ref:
+    description: >-
+      A Git ref (commit SHA, branch name, or tag name) to build Amber from source.
+      If provided, this overrides 'amber-version' and triggers a build from source.
+    default: ""
 outputs:
   script_outputs:
     description: "JSON object containing all outputs set by the script via $AMBER_SCRIPT_OUTPUT"
@@ -42,7 +52,7 @@ runs:
       with:
         path: ${{ inputs.cache-path != '' && format('{0}/dist/{1}.sh', inputs.cache-path, steps.script-hash.outputs.hash) || format('{0}/dist/{1}.sh', steps.script-hash.outputs.cache-base, steps.script-hash.outputs.hash) }}
         key: amber-script-action-${{ inputs.amber-version }}-${{ steps.script-hash.outputs.hash }}
-    - uses: lens0021/setup-amber@58394844f9bb51e8b559f224b03f6dcb3d79f644 # v2.2.0
+    - uses: lens0021/setup-amber@8d238a8b042c54dc73f555fa5f25948311f5a126 # v2.3.0
       id: setup-amber
       if: ${{ !inputs.enable-cache || steps.cache-compiled.outputs.cache-hit != 'true' }}
       with:
@@ -50,6 +60,8 @@ runs:
         enable-cache: ${{ inputs.enable-cache }}
         cache-path: ${{ inputs.cache-path != '' && format('{0}/actions/setup-amber', inputs.cache-path) || format('{0}/actions/setup-amber', steps.script-hash.outputs.cache-base) }}
         bin-path: ${{ inputs.cache-path != '' && format('{0}/bin', inputs.cache-path) || format('{0}/bin', steps.script-hash.outputs.cache-base) }}
+        amber-repository-url: ${{ inputs.amber-repository-url }}
+        amber-repository-ref: ${{ inputs.amber-repository-ref }}
     - id: run-script
       shell: bash
       env:
