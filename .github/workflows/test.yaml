@@ -104,4 +104,4 @@ jobs:
         with:
           amber-repository-ref: 75a57027775f56b4044439346f2cd33df80645f9
           script: |
-            echo trust ls(".")
+            echo(trust ls("."))
