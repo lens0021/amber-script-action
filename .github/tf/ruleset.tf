@@ -43,6 +43,7 @@ resource "github_repository_ruleset" "default" {
       dynamic "required_check" {
         for_each = [
           "biome",
+          "check-dist",
           "--> Linted: CHECKOV",
           "--> Linted: GITHUB_ACTIONS",
           "--> Linted: GITLEAKS",
