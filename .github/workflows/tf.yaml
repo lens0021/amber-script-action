@@ -82,4 +82,4 @@ jobs:
       - run: tofu init
       - run: tofu apply -auto-approve
         env:
-          TF_LOG: ${{ case(runner.debug, 'DEBUG', '') }}
+          TF_LOG: ${{ runner.debug && 'DEBUG' || '' }}
