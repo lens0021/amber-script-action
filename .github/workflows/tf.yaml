@@ -34,8 +34,10 @@ jobs:
       - id: plan
         run: |
           set +e
-          output=$(tofu plan -no-color -detailed-exitcode 2>&1)
+          tofu plan -no-color -detailed-exitcode > /tmp/plan_output 2>&1
           exitcode=$?
+          output=$(cat /tmp/plan_output)
+          cat /tmp/plan_output
           {
             echo "exitcode=$exitcode"
             echo 'stdout<<PLAN_EOF'
