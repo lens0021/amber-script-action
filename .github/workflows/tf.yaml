@@ -82,4 +82,5 @@ jobs:
       - run: tofu init
       - run: tofu apply -auto-approve
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_LOG: ${{ runner.debug && 'DEBUG' || '' }}
