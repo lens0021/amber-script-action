@@ -78,8 +78,8 @@ jobs:
                 body: output,
               });
             }
-      - name: Manage drift issue
-        if: github.event_name == 'push'
+      - if: github.event_name == 'push'
+        name: Manage drift issue
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         env:
           PLAN_EXIT_CODE: ${{ steps.plan.outputs.exitcode }}
