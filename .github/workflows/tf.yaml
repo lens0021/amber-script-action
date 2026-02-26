@@ -116,6 +116,6 @@ jobs:
               });
             }
       - if: steps.plan.outputs.exitcode == 1
-        run: exit $PLAN_EXIT_CODE
+        run: exit "$PLAN_EXIT_CODE"
         env:
           PLAN_EXIT_CODE: ${{ steps.plan.outputs.exitcode }}
