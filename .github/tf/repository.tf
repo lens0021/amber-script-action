@@ -24,6 +24,16 @@ resource "github_repository" "this" {
   topics                      = ["amber"]
   visibility                  = "public"
   web_commit_signoff_required = false
+
+  lifecycle {
+    ignore_changes = [
+      # Cannot be imported
+      archive_on_destroy,
+
+      # Deprecated
+      ignore_vulnerability_alerts_during_read,
+    ]
+  }
 }
 
 # secrets.GITHUB_TOKEN does not have the permission for this:
