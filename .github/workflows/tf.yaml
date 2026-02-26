@@ -32,21 +32,7 @@ jobs:
       - uses: opentofu/setup-opentofu@9d84900f3238fab8cd84ce47d658d25dd008be2f # v1.0.8
       - run: tofu init
       - id: plan
-        run: |
-          set +e
-          tofu plan -no-color -detailed-exitcode > /tmp/plan_output 2>&1
-          exitcode=$?
-          output=$(cat /tmp/plan_output)
-          cat /tmp/plan_output
-          {
-            echo "exitcode=$exitcode"
-            echo 'stdout<<PLAN_EOF'
-            echo "$output"
-            echo 'PLAN_EOF'
-          } >> "$GITHUB_OUTPUT"
-          if [ "$exitcode" -ne 2 ]; then
-            exit "$exitcode"
-          fi
+        run: tofu plan -no-color -detailed-exitcode
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: github.event_name == 'pull_request'
@@ -129,3 +115,7 @@ jobs:
                 state_reason: 'completed',
               });
             }
+      - if: steps.plan.outputs.exitcode == 1
+        run: exit "$PLAN_EXIT_CODE"
+        env:
+          PLAN_EXIT_CODE: ${{ steps.plan.outputs.exitcode }}
