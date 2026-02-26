@@ -11,6 +11,7 @@ on:
     paths:
       - ".github/tf/**"
       - .github/workflows/tf.yaml
+  workflow_dispatch:
 
 permissions: {}
 
@@ -70,7 +71,7 @@ jobs:
                 body: output,
               });
             }
-      - if: github.event_name == 'push'
+      - if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         name: Manage drift issue
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         env:
