@@ -78,3 +78,5 @@ jobs:
       - uses: opentofu/setup-opentofu@9d84900f3238fab8cd84ce47d658d25dd008be2f # v1.0.8
       - run: tofu init
       - run: tofu apply -auto-approve
+        env:
+          TF_LOG: ${{ case(runner.debug, 'DEBUG', '') }}
