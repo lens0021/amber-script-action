@@ -35,12 +35,16 @@ jobs:
         run: |
           set +e
           output=$(tofu plan -no-color -detailed-exitcode 2>&1)
-          echo "exitcode=$?" >> "$GITHUB_OUTPUT"
+          exitcode=$?
           {
+            echo "exitcode=$exitcode"
             echo 'stdout<<PLAN_EOF'
             echo "$output"
             echo 'PLAN_EOF'
           } >> "$GITHUB_OUTPUT"
+          if [ "$exitcode" -ne 2 ]; then
+            exit "$exitcode"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: github.event_name == 'pull_request'
@@ -123,6 +127,3 @@ jobs:
                 state_reason: 'completed',
               });
             }
-      - name: Fail on plan error
-        if: steps.plan.outputs.exitcode == '1'
-        run: exit 1
