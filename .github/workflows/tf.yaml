@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - ".github/tf/**"
+      - .github/workflows/tf.yaml
   push:
     branches:
       - main
     paths:
       - ".github/tf/**"
+      - .github/workflows/tf.yaml
 
 permissions: {}
 
