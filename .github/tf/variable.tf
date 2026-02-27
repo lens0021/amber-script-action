@@ -1,8 +1,8 @@
-variable "github_action" {
+variable "github_actions" {
   type    = string
   default = "false"
 }
 
 locals {
-  github_action = var.github_action == "true"
+  github_actions = var.github_actions == "true"
 }
