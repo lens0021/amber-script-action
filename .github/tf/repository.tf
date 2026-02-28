@@ -18,14 +18,12 @@ resource "github_repository" "this" {
   has_projects                = false
   has_wiki                    = false
   homepage_url                = ""
-  merge_commit_message        = null
-  merge_commit_title          = null
   name                        = "amber-script-action"
   squash_merge_commit_message = local.github_actions ? null : "BLANK"
   squash_merge_commit_title   = local.github_actions ? null : "PR_TITLE"
   topics                      = ["amber"]
   visibility                  = "public"
-  vulnerability_alerts        = local.github_actions ? true : null
+  vulnerability_alerts        = local.github_actions ? null : true
   web_commit_signoff_required = false
 
   dynamic "security_and_analysis" {
@@ -44,7 +42,6 @@ resource "github_repository" "this" {
     ignore_changes = [
       # Cannot be imported
       archive_on_destroy,
-
       # Deprecated
       ignore_vulnerability_alerts_during_read,
     ]
