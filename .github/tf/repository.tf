@@ -23,18 +23,15 @@ resource "github_repository" "this" {
   squash_merge_commit_title   = "PR_TITLE"
   topics                      = ["amber"]
   visibility                  = "public"
-  vulnerability_alerts        = local.github_actions ? null : true
+  vulnerability_alerts        = true
   web_commit_signoff_required = false
 
-  dynamic "security_and_analysis" {
-    for_each = local.github_actions ? [] : [true]
-    content {
-      secret_scanning {
-        status = "enabled"
-      }
-      secret_scanning_push_protection {
-        status = "enabled"
-      }
+  security_and_analysis {
+    secret_scanning {
+      status = "enabled"
+    }
+    secret_scanning_push_protection {
+      status = "enabled"
     }
   }
 
