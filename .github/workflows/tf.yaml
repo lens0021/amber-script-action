@@ -27,6 +27,6 @@ jobs:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
-      - uses: lens0021/repo-settings-as-code@66113512d5cbdcf36a9d6029dba919e5e79cd636 # v1.0.0
+      - uses: lens0021/repo-settings-as-code@70913c9019cb279344e81c9ad640d2fd3f62cf47 # v2.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
