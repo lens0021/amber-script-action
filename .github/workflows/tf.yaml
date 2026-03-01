@@ -3,7 +3,7 @@ name: Tofu
 on:
   pull_request:
     paths:
-      - ".github/tf/**"
+      - ".tf/**"
       - .github/workflows/tf.yaml
   push:
     branches:
