@@ -73,6 +73,7 @@ jobs:
                 body: output,
               });
             }
+            await core.summary.addRaw(`Plan comment ${existing ? 'updated' : 'created'}.`).write();
       - if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         name: Manage drift issue
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
@@ -118,6 +119,7 @@ jobs:
                 state_reason: 'completed',
               });
             }
+            await core.summary.addRaw(hasChanges ? 'Drift detected.' : existing ? 'Drift resolved.' : 'No drift.').write();
       - if: steps.plan.outputs.exitcode == 1
         run: exit "$PLAN_EXIT_CODE"
         env:
