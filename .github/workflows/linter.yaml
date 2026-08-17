@@ -45,4 +45,4 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: rvben/rumdl@4e70093543c2d1ea39eab81e5f86cdfe75966b91 # v0.2.49
+      - uses: rvben/rumdl@0ac9bfbb1421d5acf0283c46ba09ae46699e2fda # v0.2.53
